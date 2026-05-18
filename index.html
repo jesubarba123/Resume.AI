@@ -1,0 +1,3475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OpenResume Builder is a free, private browser-based resume optimizer and DOCX generator.">
+  <title>OpenResume Builder</title>
+  <style>
+:root {
+  --bg: #0d1117;
+  --card: #161b22;
+  --card-soft: #1c2128;
+  --border: #30363d;
+  --border-soft: #21262d;
+  --text: #f0f6fc;
+  --muted: #8b949e;
+  --blue: #2f81f7;
+  --blue-soft: rgba(47, 129, 247, 0.14);
+  --green: #238636;
+  --green-hover: #2ea043;
+  --red: #da3633;
+  --yellow: #d29922;
+  --focus: rgba(47, 129, 247, 0.35);
+  --shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(13, 17, 23, 0.88);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+}
+
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  min-height: 64px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.78rem;
+  letter-spacing: 0;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav a {
+  color: var(--muted);
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+
+.nav a:hover {
+  background: var(--card-soft);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 42px 0 54px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 28px;
+  align-items: stretch;
+  padding-bottom: 28px;
+}
+
+.eyebrow,
+.section-kicker {
+  margin: 0 0 8px;
+  color: var(--blue);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  margin: 0;
+  max-width: 760px;
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.hero__copy {
+  max-width: 680px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+
+.notice-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.notice {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--muted);
+}
+
+.notice strong {
+  color: var(--text);
+}
+
+.notice--privacy {
+  border-color: rgba(35, 134, 54, 0.55);
+  background: rgba(35, 134, 54, 0.08);
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.card--span {
+  grid-column: 1 / -1;
+}
+
+.card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.card h2,
+.card h3 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.card h2 {
+  font-size: 1.24rem;
+}
+
+.card h3 {
+  margin-top: 18px;
+  margin-bottom: 10px;
+  font-size: 0.98rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  padding: 3px 9px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card-soft);
+  color: var(--muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 16px;
+}
+
+.dropzone {
+  display: grid;
+  gap: 10px;
+  min-height: 144px;
+  padding: 18px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: rgba(13, 17, 23, 0.45);
+}
+
+.dropzone input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #0d1117;
+  color: var(--text);
+}
+
+.dropzone p {
+  margin: 0;
+}
+
+.upload-actions {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.manual-prompt,
+.manual-note {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(47, 129, 247, 0.36);
+  border-radius: 8px;
+  background: var(--blue-soft);
+  color: var(--muted);
+}
+
+.manual-prompt strong,
+.manual-note strong {
+  color: var(--text);
+}
+
+.manual-panel[hidden] {
+  display: none;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.experience-capture {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.experience-capture__header {
+  margin-bottom: 8px;
+}
+
+.experience-rows {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.experience-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 0.9fr auto;
+  gap: 10px;
+  align-items: end;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(13, 17, 23, 0.42);
+}
+
+.experience-row__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #21262d;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.experience-row__detail {
+  grid-column: 2 / -1;
+}
+
+.experience-row__detail textarea {
+  min-height: 84px;
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  color: var(--text);
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 98px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6e7681;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.resume-editor:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--focus);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 13px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #21262d;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: background 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+}
+
+.btn:hover {
+  background: #30363d;
+  text-decoration: none;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.btn--primary {
+  background: var(--green);
+  border-color: rgba(240, 246, 252, 0.12);
+}
+
+.btn--primary:hover {
+  background: var(--green-hover);
+}
+
+.btn--danger {
+  color: #ffb4ae;
+}
+
+.btn--danger:hover {
+  border-color: rgba(218, 54, 51, 0.55);
+  background: rgba(218, 54, 51, 0.14);
+}
+
+.btn--small {
+  min-height: 32px;
+  padding: 6px 10px;
+  font-size: 0.88rem;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.muted,
+.status {
+  color: var(--muted);
+}
+
+.status {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.status--success {
+  color: #7ee787;
+}
+
+.status--warning {
+  color: #f2cc60;
+}
+
+.status--error {
+  color: #ff7b72;
+}
+
+.score-wrap {
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.score-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 112px;
+  border: 2px solid var(--blue);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 45%, rgba(47, 129, 247, 0.18), transparent 64%), #0d1117;
+  color: var(--text);
+  text-align: center;
+}
+
+.score-circle span {
+  display: block;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.score-circle small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.check-list,
+.alert-list,
+.recommendations {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+}
+
+.check-list {
+  list-style: none;
+}
+
+.check-list li,
+.alert,
+.recommendations p {
+  margin: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(13, 17, 23, 0.44);
+  color: var(--muted);
+}
+
+.check-list strong,
+.alert strong {
+  color: var(--text);
+}
+
+.alert--warning {
+  border-color: rgba(210, 153, 34, 0.45);
+}
+
+.alert--error {
+  border-color: rgba(218, 54, 51, 0.45);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 36px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-height: 28px;
+  padding: 5px 9px;
+  border: 1px solid rgba(47, 129, 247, 0.38);
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: #c9d1d9;
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+
+.tag-list--missing .tag {
+  border-color: rgba(210, 153, 34, 0.45);
+  background: rgba(210, 153, 34, 0.1);
+}
+
+.editor-card {
+  overflow: hidden;
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0d1117;
+}
+
+.resume-editor {
+  min-height: 780px;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 58px);
+  border: 1px solid #d0d7de;
+  border-radius: 2px;
+  background: #ffffff;
+  color: #111111;
+  font-family: Garamond, "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.35;
+  outline: none;
+}
+
+.resume-editor .editor-placeholder {
+  color: #57606a;
+  text-align: center;
+}
+
+.resume-editor h1 {
+  margin: 0 0 4px;
+  text-align: center;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.resume-editor .resume-title,
+.resume-editor .resume-contact {
+  margin: 0;
+  text-align: center;
+}
+
+.resume-editor .resume-contact {
+  margin-bottom: 18px;
+}
+
+.resume-editor h2 {
+  margin: 18px 0 8px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #222222;
+  color: #111111;
+  font-size: 16px;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+
+.resume-editor p {
+  margin: 4px 0;
+}
+
+.resume-editor ul {
+  margin: 4px 0 8px 22px;
+  padding: 0;
+}
+
+.resume-editor li {
+  margin: 3px 0;
+}
+
+.resume-editor .experience-block {
+  margin-bottom: 18px;
+}
+
+.resume-editor .company {
+  margin-top: 10px;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 22px 16px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.footer p {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .dashboard,
+  .upload-grid,
+  .form-grid,
+  .experience-row {
+    grid-template-columns: 1fr;
+  }
+
+  .score-wrap {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .full {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .topbar__inner {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 12px 0;
+  }
+
+  .nav {
+    width: 100%;
+  }
+
+  .nav a {
+    padding-left: 0;
+  }
+
+  .shell {
+    width: min(100% - 24px, 1180px);
+    padding-top: 28px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .card__header {
+    flex-direction: column;
+  }
+
+  .action-row,
+  .upload-actions {
+    align-items: stretch;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .editor-toolbar .btn {
+    width: auto;
+  }
+
+  .experience-row__detail {
+    grid-column: auto;
+  }
+
+  .resume-editor {
+    min-height: 620px;
+    padding: 24px 18px;
+    font-size: 15px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="#top" aria-label="OpenResume Builder home">
+        <span class="brand__mark">OR</span>
+        <span>OpenResume Builder</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#upload">Upload</a>
+        <a href="#analysis">Analysis</a>
+        <a href="#editor">Editor</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Free, private, open-source resume tool</p>
+        <h1>Build an ATS-friendly resume aligned to a real job description.</h1>
+        <p class="hero__copy">
+          Upload a CV or write your experience manually, analyze keywords, edit the optimized Harvard-style resume, and download an editable Word document.
+        </p>
+      </div>
+      <div class="notice-stack" aria-label="Important notices">
+        <article class="notice notice--privacy">
+          <strong>Privacy notice</strong>
+          <span>Tu CV se procesa en tu navegador. No almacenamos tus documentos ni tus datos personales.</span>
+        </article>
+        <article class="notice">
+          <strong>ATS notice</strong>
+          <span>El puntaje ATS es una estimación orientativa. Cada plataforma puede evaluar los CVs de forma diferente.</span>
+        </article>
+        <article class="notice">
+          <strong>Suggested information</strong>
+          <span>Todo dato acompañado de '(Colocar aquí la información verdadera)' debe ser revisado y reemplazado por información real antes de usar el CV.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="dashboard" aria-label="OpenResume Builder workspace">
+      <div id="upload" class="card card--span">
+        <div class="card__header">
+          <div>
+            <p class="section-kicker">Step 1</p>
+            <h2>Upload / carga de CV</h2>
+          </div>
+          <span class="badge">Browser only</span>
+        </div>
+
+        <div class="upload-grid">
+          <div class="dropzone">
+            <input id="cvFile" type="file" accept=".pdf,.docx,.txt,.rtf,.html,.jpg,.jpeg,.png" aria-label="Upload CV file">
+            <p><strong>Accepted formats:</strong> PDF, DOCX, TXT, RTF, HTML, JPG, JPEG, PNG.</p>
+            <p class="muted">PDF.js, Mammoth.js and Tesseract.js run in your browser through CDNs.</p>
+          </div>
+          <div class="upload-actions">
+            <button id="uploadBtn" class="btn btn--primary" type="button">Upload CV</button>
+            <button id="manualToggle" class="btn" type="button">Use manual form</button>
+            <p id="fileStatus" class="status" role="status">No file processed yet.</p>
+          </div>
+        </div>
+
+        <div class="manual-prompt">
+          <strong>¿Tu archivo no carga bien?</strong>
+          <span>Ingresa tu información manualmente.</span>
+        </div>
+      </div>
+
+      <div class="card card--span">
+        <div class="card__header">
+          <div>
+            <p class="section-kicker">Step 2</p>
+            <h2>Candidate details</h2>
+          </div>
+          <span class="badge">Editable</span>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Nombre completo
+            <input id="fullName" type="text" autocomplete="name" placeholder="Nombre completo">
+          </label>
+          <label>
+            Correo electrónico
+            <input id="email" type="email" autocomplete="email" placeholder="name@example.com">
+          </label>
+          <label>
+            Teléfono
+            <input id="phone" type="tel" autocomplete="tel" placeholder="+51 999 999 999">
+          </label>
+          <label>
+            LinkedIn
+            <input id="linkedin" type="url" placeholder="https://www.linkedin.com/in/username">
+          </label>
+          <label>
+            Puesto objetivo
+            <input id="targetRole" type="text" placeholder="Data Analyst, Frontend Developer, Recruiter...">
+          </label>
+          <label>
+            Idioma de salida
+            <select id="outputLanguage">
+              <option value="es">Español</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <label class="full">
+            Descripción de la vacante
+            <textarea id="jobDescription" rows="8" placeholder="Paste the job description here..."></textarea>
+          </label>
+        </div>
+
+        <div class="experience-capture">
+          <div class="card__header experience-capture__header">
+            <div>
+              <p class="section-kicker">Required for accurate experience</p>
+              <h3>Empresas, puestos y fechas</h3>
+            </div>
+            <button id="addExperienceRow" class="btn btn--small" type="button">Add experience</button>
+          </div>
+          <p class="manual-note">Completa estos campos para que el documento use exactamente tus empresas, cargos y fechas. Esta parte ya no depende del parsing del archivo.</p>
+          <div id="experienceRows" class="experience-rows" aria-label="Work history details"></div>
+        </div>
+
+        <div class="action-row">
+          <button id="analyzeBtn" class="btn btn--primary" type="button">Analyze CV</button>
+          <button id="clearBtn" class="btn btn--danger" type="button">Clear and start again</button>
+        </div>
+      </div>
+
+      <section id="manualPanel" class="card card--span manual-panel" hidden aria-label="Manual resume form">
+        <div class="card__header">
+          <div>
+            <p class="section-kicker">Manual mode</p>
+            <h2>Manual resume information</h2>
+          </div>
+          <span class="badge">No upload needed</span>
+        </div>
+        <p class="manual-note">Te recomendamos incluir las palabras clave sugeridas en tus experiencias y logros, siempre que reflejen tu experiencia real.</p>
+
+        <div class="form-grid">
+          <label>
+            Nombre completo
+            <input id="manualFullName" type="text" placeholder="Nombre completo">
+          </label>
+          <label>
+            Correo electrónico
+            <input id="manualEmail" type="email" placeholder="name@example.com">
+          </label>
+          <label>
+            Teléfono
+            <input id="manualPhone" type="tel" placeholder="+51 999 999 999">
+          </label>
+          <label>
+            LinkedIn
+            <input id="manualLinkedin" type="url" placeholder="https://www.linkedin.com/in/username">
+          </label>
+          <label>
+            Puesto objetivo
+            <input id="manualTargetRole" type="text" placeholder="Project Manager, QA Engineer...">
+          </label>
+          <label>
+            Idioma de salida
+            <select id="manualOutputLanguage">
+              <option value="es">Español</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <label class="full">
+            Resumen o experiencia general
+            <textarea id="manualSummary" rows="4" placeholder="Describe your professional profile, industries, main strengths and scope."></textarea>
+          </label>
+          <label class="full">
+            Experiencia profesional
+            <textarea id="manualExperience" rows="7" placeholder="Company, role, dates, responsibilities and achievements."></textarea>
+          </label>
+          <label>
+            Educación
+            <textarea id="manualEducation" rows="4" placeholder="Degree, institution, dates."></textarea>
+          </label>
+          <label>
+            Certificaciones
+            <textarea id="manualCertifications" rows="4" placeholder="Certifications, courses, licenses."></textarea>
+          </label>
+          <label>
+            Habilidades técnicas
+            <textarea id="manualSkills" rows="4" placeholder="Tools, platforms, methodologies, languages, frameworks."></textarea>
+          </label>
+          <label>
+            Idiomas
+            <textarea id="manualLanguages" rows="4" placeholder="Spanish - Native, English - Advanced..."></textarea>
+          </label>
+          <label class="full">
+            Información adicional
+            <textarea id="manualAdditional" rows="4" placeholder="Projects, volunteering, publications, awards or other relevant information."></textarea>
+          </label>
+          <label class="full">
+            Descripción de la vacante
+            <textarea id="manualJobDescription" rows="8" placeholder="Paste the job description here..."></textarea>
+          </label>
+        </div>
+
+        <div class="action-row">
+          <button id="applyManualBtn" class="btn btn--primary" type="button">Analyze CV</button>
+          <button id="copyManualBtn" class="btn" type="button">Copy manual data to main form</button>
+        </div>
+      </section>
+
+      <section id="analysis" class="card">
+        <div class="card__header">
+          <div>
+            <p class="section-kicker">Step 3</p>
+            <h2>Análisis ATS</h2>
+          </div>
+          <span class="badge">Estimated</span>
+        </div>
+
+        <div class="score-wrap">
+          <div class="score-circle" aria-live="polite">
+            <span id="atsScore">--</span>
+            <small>/100</small>
+          </div>
+          <div>
+            <h3 id="scoreTitle">ATS score pending</h3>
+            <p class="muted">The score uses structure, keywords, contact data, measurable impact, format and role alignment. It is only an orientation.</p>
+          </div>
+        </div>
+        <ul id="criteriaList" class="check-list"></ul>
+        <div id="issuesList" class="alert-list"></div>
+      </section>
+
+      <section class="card">
+        <div class="card__header">
+          <div>
+            <p class="section-kicker">Step 4</p>
+            <h2>Palabras clave detectadas</h2>
+          </div>
+          <span class="badge">JD driven</span>
+        </div>
+        <h3>Keywords detected</h3>
+        <div id="keywordsDetected" class="tag-list"></div>
+        <h3>Missing keywords</h3>
+        <div id="missingKeywords" class="tag-list tag-list--missing"></div>
+      </section>
+
+      <section class="card card--span">
+        <div class="card__header">
+          <div>
+            <p class="section-kicker">Step 5</p>
+            <h2>Recomendaciones</h2>
+          </div>
+          <span class="badge">Ethical guidance</span>
+        </div>
+        <div id="suggestionsList" class="recommendations">
+          <p class="muted">Run an analysis to see targeted suggestions before generating the optimized resume.</p>
+        </div>
+        <div class="action-row">
+          <button id="generateBtn" class="btn btn--primary" type="button" disabled>Generate optimized CV</button>
+        </div>
+      </section>
+
+      <section id="editor" class="card card--span editor-card">
+        <div class="card__header">
+          <div>
+            <p class="section-kicker">Step 6</p>
+            <h2>Editor del CV optimizado</h2>
+          </div>
+          <span id="optimizedScoreBadge" class="badge">Optimized score: --</span>
+        </div>
+
+        <div class="editor-toolbar" role="toolbar" aria-label="Resume editor toolbar">
+          <button class="btn btn--small" data-command="bold" type="button">Bold</button>
+          <button class="btn btn--small" data-command="underline" type="button">Underline</button>
+          <button class="btn btn--small" data-command="justifyLeft" type="button">Align left</button>
+          <button class="btn btn--small" data-command="justifyCenter" type="button">Center</button>
+        </div>
+
+        <div id="resumeEditor" class="resume-editor" contenteditable="true" spellcheck="true" aria-label="Editable optimized resume">
+          <p class="editor-placeholder">Generate the optimized CV to edit it here.</p>
+        </div>
+      </section>
+
+      <section class="card card--span">
+        <div class="card__header">
+          <div>
+            <p class="section-kicker">Step 7</p>
+            <h2>Descarga Word</h2>
+          </div>
+          <span class="badge">DOCX</span>
+        </div>
+        <p class="muted">The exported file uses Garamond 11, clean headings, simple paragraphs and no complex tables, columns, icons or visual bars.</p>
+        <div class="action-row">
+          <button id="downloadBtn" class="btn btn--primary" type="button" disabled>Download Word</button>
+          <button id="clearBtnBottom" class="btn" type="button">Clear and start again</button>
+        </div>
+        <p id="downloadStatus" class="status" role="status"></p>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>OpenResume Builder is a community-minded open-source tool. It helps you present real experience clearly; it does not guarantee interviews, hiring decisions or ATS approval.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script src="https://unpkg.com/mammoth@1.7.0/mammoth.browser.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+  <script src="https://unpkg.com/docx@8.2.2/build/index.umd.js" defer></script>
+  <script>
+(() => {
+  "use strict";
+
+  const MARKER = "(Colocar aquí la información verdadera)";
+  const state = {
+    rawText: "",
+    sourceName: "",
+    parsed: emptyParsed(),
+    job: emptyJob(),
+    analysis: null,
+    optimized: null
+  };
+
+  const ids = [
+    "cvFile", "uploadBtn", "manualToggle", "fileStatus", "fullName", "email", "phone",
+    "linkedin", "targetRole", "outputLanguage", "jobDescription", "manualPanel",
+    "experienceRows", "addExperienceRow",
+    "manualFullName", "manualEmail", "manualPhone", "manualLinkedin", "manualTargetRole",
+    "manualOutputLanguage", "manualSummary", "manualExperience", "manualEducation",
+    "manualCertifications", "manualSkills", "manualLanguages", "manualAdditional",
+    "manualJobDescription", "applyManualBtn", "copyManualBtn", "analyzeBtn", "clearBtn",
+    "clearBtnBottom", "atsScore", "scoreTitle", "criteriaList", "issuesList",
+    "keywordsDetected", "missingKeywords", "suggestionsList", "generateBtn",
+    "optimizedScoreBadge", "resumeEditor", "downloadBtn", "downloadStatus"
+  ];
+
+  const el = {};
+  ids.forEach((id) => {
+    el[id] = document.getElementById(id);
+  });
+
+  const stopWords = new Set([
+    "the", "and", "for", "with", "that", "this", "from", "will", "you", "your", "are",
+    "our", "has", "have", "their", "they", "into", "about", "over", "under", "between",
+    "role", "team", "work", "working", "experience", "years", "ability", "strong",
+    "knowledge", "skills", "responsible", "requirements", "preferred", "required",
+    "job", "description", "candidate", "using", "use", "de", "la", "el", "los", "las",
+    "un", "una", "para", "por", "con", "del", "al", "que", "en", "y", "o", "se",
+    "su", "sus", "como", "ser", "tener", "experiencia", "equipo", "trabajo", "puesto",
+    "requisitos", "responsabilidades", "habilidades", "años", "conocimiento", "capacidad"
+  ]);
+
+  const techTerms = [
+    "Excel", "Power BI", "Tableau", "SQL", "Python", "R", "JavaScript", "TypeScript",
+    "React", "Angular", "Vue", "HTML", "CSS", "Node.js", "Express", "NestJS", "Java",
+    "Spring", "C#", ".NET", "PHP", "Laravel", "Django", "Flask", "FastAPI", "REST",
+    "GraphQL", "API", "Microservices", "Docker", "Kubernetes", "AWS", "Azure", "GCP",
+    "Git", "GitHub", "GitLab", "CI/CD", "Jenkins", "GitHub Actions", "PostgreSQL",
+    "MySQL", "SQL Server", "MongoDB", "Redis", "Snowflake", "BigQuery", "dbt",
+    "Airflow", "Spark", "Databricks", "ETL", "ELT", "Selenium", "Cypress", "Playwright",
+    "Jest", "Postman", "Jira", "Confluence", "Scrum", "Kanban", "Agile", "Lean",
+    "Figma", "UX", "UI", "ATS", "LinkedIn Recruiter", "Workday", "Greenhouse",
+    "SAP", "Salesforce", "HubSpot", "Google Analytics", "Looker", "Power Query",
+    "Power Pivot", "VBA", "SharePoint", "ServiceNow", "KPI", "OKR", "BPMN", "UML"
+  ];
+
+  const softSkills = [
+    "communication", "leadership", "stakeholder management", "problem solving",
+    "collaboration", "analytical thinking", "adaptability", "ownership", "prioritization",
+    "comunicación", "liderazgo", "gestión de stakeholders", "resolución de problemas",
+    "colaboración", "pensamiento analítico", "adaptabilidad", "priorización"
+  ];
+
+  const languageNames = [
+    "Spanish", "English", "Portuguese", "French", "German", "Italian", "Mandarin",
+    "Chinese", "Japanese", "Korean", "Arabic", "Dutch", "Russian", "Quechua",
+    "Español", "Inglés", "Portugúes", "Portugués", "Francés", "Alemán", "Italiano",
+    "Mandarín", "Chino", "Japonés", "Coreano", "Árabe", "Holandés", "Ruso"
+  ];
+
+  const languageLevels = [
+    "native", "fluent", "advanced", "intermediate", "basic", "beginner",
+    "bilingual", "professional", "conversational", "c1", "c2", "b1", "b2", "a1", "a2",
+    "nativo", "fluido", "avanzado", "intermedio", "básico", "basico", "principiante",
+    "bilingüe", "bilingue", "profesional", "conversacional"
+  ];
+
+  const sectionHeadings = [
+    "professional summary", "summary", "profile", "perfil profesional", "perfil",
+    "resumen", "extracto", "professional experience", "work experience",
+    "employment history", "experience", "experiencia profesional", "experiencia laboral",
+    "experiencia", "technical skills", "skills", "tools", "technologies", "habilidades técnicas",
+    "habilidades tecnicas", "habilidades", "herramientas", "tecnologías", "tecnologias",
+    "education", "educación", "educacion", "academic", "formación", "formacion",
+    "certifications", "certificaciones", "licenses", "licencias", "courses", "cursos",
+    "languages", "idiomas", "additional information", "additional", "projects",
+    "awards", "volunteer", "información adicional", "informacion adicional",
+    "proyectos", "logros"
+  ];
+
+  const actionVerbs = {
+    en: [
+      "Led", "Managed", "Designed", "Implemented", "Coordinated", "Optimized", "Automated",
+      "Analyzed", "Developed", "Improved", "Delivered", "Monitored", "Documented",
+      "Standardized", "Built", "Integrated", "Supported", "Defined", "Evaluated",
+      "Streamlined"
+    ],
+    es: [
+      "Lideré", "Gestioné", "Diseñé", "Implementé", "Coordiné", "Optimicé", "Automaticé",
+      "Analicé", "Desarrollé", "Mejoré", "Entregué", "Monitoreé", "Documenté",
+      "Estandaricé", "Construí", "Integré", "Apoyé", "Definí", "Evalué", "Agilicé"
+    ]
+  };
+
+  const domainLibrary = {
+    data: {
+      match: ["data", "datos", "analytics", "analyst", "bi", "sql", "power bi", "tableau", "dashboard", "kpi", "reporting"],
+      fallbackTools: ["Excel", "Power BI", "SQL", "Python", "Tableau"],
+      en: {
+        role: "Data Analyst",
+        functions: [
+          "Analyzed operational and business data to identify trends, gaps and improvement opportunities using {tools}.",
+          "Built dashboards, recurring reports and KPI views to support data-driven decision-making for stakeholders.",
+          "Defined reporting requirements, data validation rules and metric logic with business users and technical teams.",
+          "Automated data preparation and reporting workflows to improve accuracy and reduce manual effort {marker}.",
+          "Documented insights, assumptions and recommendations to make performance results easier to understand.",
+          "Improved reporting quality by {metric} through standardized datasets, controls and dashboard governance {marker}."
+        ],
+        sbi: [
+          "The team needed clearer visibility into operational KPIs and business performance.",
+          "I structured datasets, standardized indicators and built reporting assets aligned with stakeholder priorities.",
+          "Improved decision-making speed and reporting reliability by {metric} {marker}."
+        ]
+      },
+      es: {
+        role: "Analista de Datos",
+        functions: [
+          "Analicé datos operativos y de negocio para identificar tendencias, brechas y oportunidades de mejora usando {tools}.",
+          "Construí dashboards, reportes recurrentes y vistas de KPIs para apoyar la toma de decisiones basada en datos.",
+          "Definí requerimientos de reportería, reglas de validación y lógica de métricas con usuarios de negocio y equipos técnicos.",
+          "Automaticé flujos de preparación de datos y reportería para mejorar la precisión y reducir esfuerzo manual {marker}.",
+          "Documenté hallazgos, supuestos y recomendaciones para facilitar la lectura de resultados de desempeño.",
+          "Mejoré la calidad de reportería en {metric} mediante datasets estandarizados, controles y gobierno de dashboards {marker}."
+        ],
+        sbi: [
+          "El equipo necesitaba mayor visibilidad sobre KPIs operativos y desempeño del negocio.",
+          "Estructuré datasets, estandaricé indicadores y construí activos de reportería alineados a prioridades de stakeholders.",
+          "Mejoré la velocidad de toma de decisiones y confiabilidad de reportes en {metric} {marker}."
+        ]
+      }
+    },
+    recruiting: {
+      match: ["recruit", "reclutamiento", "sourcing", "screening", "interviews", "entrevistas", "talent", "ats", "hiring"],
+      fallbackTools: ["ATS", "LinkedIn Recruiter", "Excel", "Workday", "Greenhouse"],
+      en: {
+        role: "Talent Acquisition Specialist",
+        functions: [
+          "Managed sourcing, screening and candidate follow-up for roles aligned with hiring priorities and business needs.",
+          "Used {tools} to maintain candidate pipelines, update statuses and improve recruitment process visibility.",
+          "Coordinated interviews, feedback loops and communication with hiring managers to reduce process friction.",
+          "Documented candidate profiles, role requirements and selection notes to support structured hiring decisions.",
+          "Improved pipeline conversion by {metric} through targeted sourcing and clearer candidate communication {marker}.",
+          "Monitored recruitment metrics, bottlenecks and SLA compliance to recommend process improvements {marker}."
+        ],
+        sbi: [
+          "Hiring teams needed stronger pipeline visibility and faster candidate coordination.",
+          "I organized sourcing channels, candidate tracking and interview communication around role requirements.",
+          "Improved hiring process follow-up and candidate experience by {metric} {marker}."
+        ]
+      },
+      es: {
+        role: "Especialista de Reclutamiento",
+        functions: [
+          "Gestioné sourcing, screening y seguimiento de candidatos para roles alineados a prioridades de contratación y negocio.",
+          "Usé {tools} para mantener pipelines de candidatos, actualizar estados y mejorar la visibilidad del proceso.",
+          "Coordiné entrevistas, ciclos de feedback y comunicación con hiring managers para reducir fricción operativa.",
+          "Documenté perfiles de candidatos, requerimientos del rol y notas de selección para apoyar decisiones estructuradas.",
+          "Mejoré la conversión del pipeline en {metric} mediante sourcing focalizado y comunicación más clara {marker}.",
+          "Monitoreé métricas de reclutamiento, cuellos de botella y cumplimiento de SLAs para recomendar mejoras {marker}."
+        ],
+        sbi: [
+          "Los equipos de contratación necesitaban mayor visibilidad del pipeline y coordinación más ágil con candidatos.",
+          "Organicé canales de sourcing, seguimiento de candidatos y comunicación de entrevistas según los requisitos del rol.",
+          "Mejoré el seguimiento del proceso y la experiencia del candidato en {metric} {marker}."
+        ]
+      }
+    },
+    project: {
+      match: ["project", "proyecto", "stakeholder", "agile", "scrum", "kanban", "risk", "riesgo", "deliverables", "entregables"],
+      fallbackTools: ["Jira", "Confluence", "Scrum", "Kanban", "Excel"],
+      en: {
+        role: "Project Manager",
+        functions: [
+          "Led planning, tracking and delivery routines for initiatives aligned with scope, timelines and stakeholder expectations.",
+          "Coordinated stakeholders, dependencies and risks using {tools} to maintain visibility and accountability.",
+          "Defined project documentation, meeting cadences and status reports to support transparent decision-making.",
+          "Managed backlog priorities, action items and delivery blockers in collaboration with business and technical teams.",
+          "Improved delivery predictability by {metric} through risk tracking, prioritization and governance rituals {marker}.",
+          "Standardized project controls and lessons learned to support continuous improvement across initiatives {marker}."
+        ],
+        sbi: [
+          "The project required tighter coordination across stakeholders, dependencies and delivery milestones.",
+          "I organized planning routines, risk tracking and status communication around agreed priorities.",
+          "Improved delivery visibility and follow-through by {metric} {marker}."
+        ]
+      },
+      es: {
+        role: "Gestor de Proyectos",
+        functions: [
+          "Lideré planificación, seguimiento y rutinas de entrega para iniciativas alineadas a alcance, plazos y expectativas de stakeholders.",
+          "Coordiné stakeholders, dependencias y riesgos usando {tools} para mantener visibilidad y responsabilidad compartida.",
+          "Definí documentación de proyecto, cadencias de reuniones y reportes de estado para apoyar decisiones transparentes.",
+          "Gestioné prioridades de backlog, acciones pendientes y bloqueos de entrega con equipos de negocio y tecnología.",
+          "Mejoré la predictibilidad de entregas en {metric} mediante seguimiento de riesgos, priorización y rituales de gobierno {marker}.",
+          "Estandaricé controles de proyecto y lecciones aprendidas para impulsar mejora continua entre iniciativas {marker}."
+        ],
+        sbi: [
+          "El proyecto requería mayor coordinación entre stakeholders, dependencias e hitos de entrega.",
+          "Organicé rutinas de planificación, seguimiento de riesgos y comunicación de estado según prioridades acordadas.",
+          "Mejoré la visibilidad y seguimiento de entregas en {metric} {marker}."
+        ]
+      }
+    },
+    frontend: {
+      match: ["frontend", "front-end", "react", "angular", "vue", "javascript", "typescript", "css", "html", "accessibility", "ui"],
+      fallbackTools: ["HTML", "CSS", "JavaScript", "TypeScript", "React"],
+      en: {
+        role: "Frontend Developer",
+        functions: [
+          "Developed responsive interfaces and reusable UI components aligned with product, design and accessibility requirements.",
+          "Integrated frontend workflows with APIs and data services using {tools} while improving usability and reliability.",
+          "Optimized page performance, interaction states and rendering behavior to support a smoother user experience {marker}.",
+          "Collaborated with product, design and backend teams to refine acceptance criteria and delivery priorities.",
+          "Documented component behavior, edge cases and implementation notes to improve maintainability.",
+          "Improved user task completion or interface performance by {metric} through targeted frontend enhancements {marker}."
+        ],
+        sbi: [
+          "The product needed cleaner interfaces, reliable API integration and a better user experience.",
+          "I implemented reusable components, refined interaction states and coordinated details with product and engineering.",
+          "Improved usability, maintainability or performance by {metric} {marker}."
+        ]
+      },
+      es: {
+        role: "Desarrollador Frontend",
+        functions: [
+          "Desarrollé interfaces responsivas y componentes reutilizables alineados a requisitos de producto, diseño y accesibilidad.",
+          "Integré flujos frontend con APIs y servicios de datos usando {tools}, mejorando usabilidad y confiabilidad.",
+          "Optimicé performance de páginas, estados de interacción y comportamiento de renderizado para una experiencia más fluida {marker}.",
+          "Colaboré con producto, diseño y backend para refinar criterios de aceptación y prioridades de entrega.",
+          "Documenté comportamiento de componentes, casos borde y notas de implementación para mejorar mantenibilidad.",
+          "Mejoré la finalización de tareas o performance de interfaz en {metric} mediante mejoras frontend focalizadas {marker}."
+        ],
+        sbi: [
+          "El producto necesitaba interfaces más claras, integración confiable con APIs y mejor experiencia de usuario.",
+          "Implementé componentes reutilizables, refiné estados de interacción y coordiné detalles con producto e ingeniería.",
+          "Mejoré usabilidad, mantenibilidad o performance en {metric} {marker}."
+        ]
+      }
+    },
+    backend: {
+      match: ["backend", "back-end", "api", "microservices", "microservicios", "cloud", "aws", "azure", "gcp", "database", "node", "java", "spring"],
+      fallbackTools: ["REST", "Node.js", "SQL", "Docker", "AWS"],
+      en: {
+        role: "Backend Developer",
+        functions: [
+          "Designed and implemented backend services, APIs and integrations aligned with scalability and reliability requirements.",
+          "Integrated application logic with databases, external services and cloud resources using {tools}.",
+          "Optimized service performance, error handling and operational monitoring to improve system stability {marker}.",
+          "Documented technical specifications, API contracts and deployment considerations for engineering teams.",
+          "Supported releases, troubleshooting and continuous improvement across backend workflows and environments.",
+          "Improved response time, reliability or deployment quality by {metric} through backend optimization {marker}."
+        ],
+        sbi: [
+          "The platform required reliable backend services and clearer integration patterns.",
+          "I structured APIs, improved service behavior and documented technical contracts for maintainability.",
+          "Improved system reliability or performance by {metric} {marker}."
+        ]
+      },
+      es: {
+        role: "Desarrollador Backend",
+        functions: [
+          "Diseñé e implementé servicios backend, APIs e integraciones alineadas a requisitos de escalabilidad y confiabilidad.",
+          "Integré lógica de aplicación con bases de datos, servicios externos y recursos cloud usando {tools}.",
+          "Optimicé performance de servicios, manejo de errores y monitoreo operativo para mejorar estabilidad {marker}.",
+          "Documenté especificaciones técnicas, contratos de API y consideraciones de despliegue para equipos de ingeniería.",
+          "Apoyé releases, troubleshooting y mejora continua en flujos y ambientes backend.",
+          "Mejoré tiempos de respuesta, confiabilidad o calidad de despliegue en {metric} mediante optimización backend {marker}."
+        ],
+        sbi: [
+          "La plataforma requería servicios backend confiables y patrones de integración más claros.",
+          "Estructuré APIs, mejoré comportamiento de servicios y documenté contratos técnicos para mantenibilidad.",
+          "Mejoré confiabilidad o performance del sistema en {metric} {marker}."
+        ]
+      }
+    },
+    qa: {
+      match: ["qa", "quality", "testing", "automation", "selenium", "cypress", "playwright", "test cases", "regression", "defects"],
+      fallbackTools: ["Selenium", "Cypress", "Playwright", "Postman", "Jira"],
+      en: {
+        role: "QA Automation Engineer",
+        functions: [
+          "Designed test cases, test plans and regression coverage aligned with product requirements and risk areas.",
+          "Automated functional, API and regression scenarios using {tools} to improve release confidence.",
+          "Reported defects with clear evidence, reproduction steps and impact analysis for engineering teams.",
+          "Integrated quality checks with CI/CD or release workflows to support faster validation cycles {marker}.",
+          "Documented testing results, edge cases and coverage gaps to guide prioritization and continuous improvement.",
+          "Improved test coverage or defect detection by {metric} through automation and better validation strategy {marker}."
+        ],
+        sbi: [
+          "The product needed stronger validation coverage and faster feedback before releases.",
+          "I structured test cases, automated priority scenarios and reported defects with clear evidence.",
+          "Improved release confidence or test coverage by {metric} {marker}."
+        ]
+      },
+      es: {
+        role: "Ingeniero QA Automation",
+        functions: [
+          "Diseñé casos de prueba, planes de testing y cobertura de regresión alineados a requerimientos de producto y zonas de riesgo.",
+          "Automaticé escenarios funcionales, de API y regresión usando {tools} para mejorar confianza en releases.",
+          "Reporté defectos con evidencia clara, pasos de reproducción y análisis de impacto para equipos de ingeniería.",
+          "Integré controles de calidad con flujos CI/CD o releases para acelerar ciclos de validación {marker}.",
+          "Documenté resultados de pruebas, casos borde y brechas de cobertura para guiar priorización y mejora continua.",
+          "Mejoré cobertura de pruebas o detección de defectos en {metric} mediante automatización y mejor estrategia de validación {marker}."
+        ],
+        sbi: [
+          "El producto necesitaba mayor cobertura de validación y feedback más rápido antes de releases.",
+          "Estructuré casos de prueba, automaticé escenarios prioritarios y reporté defectos con evidencia clara.",
+          "Mejoré confianza de release o cobertura de pruebas en {metric} {marker}."
+        ]
+      }
+    },
+    business: {
+      match: ["business analyst", "analista funcional", "requirements", "requerimientos", "user stories", "criteria", "workshops", "bpmn", "stakeholders"],
+      fallbackTools: ["Jira", "Confluence", "BPMN", "Excel", "UML"],
+      en: {
+        role: "Business Analyst",
+        functions: [
+          "Elicited business requirements through stakeholder conversations, workshops and process analysis.",
+          "Documented user stories, acceptance criteria and functional specifications using {tools}.",
+          "Mapped current and future processes to identify gaps, dependencies and improvement opportunities.",
+          "Coordinated validation sessions with business and technical teams to align scope, priorities and delivery expectations.",
+          "Supported backlog refinement, change analysis and UAT preparation to improve delivery clarity.",
+          "Improved requirement quality or rework reduction by {metric} through clearer documentation and validation {marker}."
+        ],
+        sbi: [
+          "The team needed clearer requirements and alignment between business needs and technical delivery.",
+          "I facilitated requirement discovery, documented acceptance criteria and validated scope with stakeholders.",
+          "Reduced ambiguity or rework by {metric} {marker}."
+        ]
+      },
+      es: {
+        role: "Analista de Negocio",
+        functions: [
+          "Levanté requerimientos de negocio mediante conversaciones con stakeholders, workshops y análisis de procesos.",
+          "Documenté historias de usuario, criterios de aceptación y especificaciones funcionales usando {tools}.",
+          "Mapeé procesos actuales y futuros para identificar brechas, dependencias y oportunidades de mejora.",
+          "Coordiné sesiones de validación con negocio y equipos técnicos para alinear alcance, prioridades y expectativas de entrega.",
+          "Apoyé refinamiento de backlog, análisis de cambios y preparación de UAT para mejorar claridad de entrega.",
+          "Mejoré calidad de requerimientos o reducción de retrabajo en {metric} mediante documentación y validación más claras {marker}."
+        ],
+        sbi: [
+          "El equipo necesitaba requerimientos más claros y alineación entre necesidades de negocio y entrega técnica.",
+          "Facilité descubrimiento de requerimientos, documenté criterios de aceptación y validé alcance con stakeholders.",
+          "Reduje ambigüedad o retrabajo en {metric} {marker}."
+        ]
+      }
+    },
+    general: {
+      match: [],
+      fallbackTools: ["Excel", "Jira", "Documentation", "Reporting", "Process Improvement"],
+      en: {
+        role: "Professional",
+        functions: [
+          "Coordinated core responsibilities aligned with the target role, business priorities and stakeholder expectations.",
+          "Used {tools} to organize information, track progress and improve visibility of deliverables.",
+          "Documented processes, decisions and outcomes to support continuity and clearer communication.",
+          "Analyzed requirements, risks and improvement opportunities to recommend practical next steps.",
+          "Improved process quality or execution speed by {metric} through structured follow-up and continuous improvement {marker}.",
+          "Supported cross-functional collaboration to deliver work with clarity, consistency and accountability."
+        ],
+        sbi: [
+          "The team needed better structure, visibility and follow-up for role-related responsibilities.",
+          "I organized information, coordinated stakeholders and documented actions around priority outcomes.",
+          "Improved execution quality or visibility by {metric} {marker}."
+        ]
+      },
+      es: {
+        role: "Profesional",
+        functions: [
+          "Coordiné responsabilidades clave alineadas al puesto objetivo, prioridades de negocio y expectativas de stakeholders.",
+          "Usé {tools} para organizar información, dar seguimiento al avance y mejorar visibilidad de entregables.",
+          "Documenté procesos, decisiones y resultados para apoyar continuidad y comunicación más clara.",
+          "Analicé requerimientos, riesgos y oportunidades de mejora para recomendar próximos pasos prácticos.",
+          "Mejoré calidad de procesos o velocidad de ejecución en {metric} mediante seguimiento estructurado y mejora continua {marker}.",
+          "Apoyé colaboración transversal para entregar trabajo con claridad, consistencia y responsabilidad compartida."
+        ],
+        sbi: [
+          "El equipo necesitaba mayor estructura, visibilidad y seguimiento de responsabilidades relacionadas al rol.",
+          "Organicé información, coordiné stakeholders y documenté acciones alrededor de resultados prioritarios.",
+          "Mejoré calidad de ejecución o visibilidad en {metric} {marker}."
+        ]
+      }
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", init);
+
+  function init() {
+    setupPdfWorker();
+    renderExperienceRows(4);
+    el.uploadBtn.addEventListener("click", handleUpload);
+    el.manualToggle.addEventListener("click", toggleManualPanel);
+    el.addExperienceRow.addEventListener("click", () => renderExperienceRows(getExperienceRowCount() + 1, getManualExperienceDetails({ includeEmpty: true })));
+    el.copyManualBtn.addEventListener("click", copyManualToMain);
+    el.applyManualBtn.addEventListener("click", () => {
+      copyManualToMain();
+      analyzeCv();
+    });
+    el.analyzeBtn.addEventListener("click", analyzeCv);
+    el.generateBtn.addEventListener("click", generateOptimizedCv);
+    el.downloadBtn.addEventListener("click", downloadWord);
+    el.clearBtn.addEventListener("click", resetApp);
+    el.clearBtnBottom.addEventListener("click", resetApp);
+    document.querySelectorAll("[data-command]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.execCommand(button.dataset.command, false, null);
+        el.resumeEditor.focus();
+      });
+    });
+  }
+
+  function renderExperienceRows(count, existing = []) {
+    const rows = [];
+    const total = Math.max(1, Math.min(count, 10));
+    for (let index = 0; index < total; index += 1) {
+      const current = existing[index] || {};
+      rows.push(`
+        <div class="experience-row" data-experience-row="${index}">
+          <span class="experience-row__number" aria-label="Experience ${index + 1}">${index + 1}</span>
+          <label>
+            Empresa
+            <input class="experience-company" type="text" value="${escapeHtml(current.company || "")}" placeholder="Nombre de la empresa">
+          </label>
+          <label>
+            Puesto
+            <input class="experience-role" type="text" value="${escapeHtml(current.role || "")}" placeholder="Cargo desempeñado">
+          </label>
+          <label>
+            Fechas
+            <input class="experience-dates" type="text" value="${escapeHtml(current.dates || "")}" placeholder="Enero 2022 - Presente">
+          </label>
+          <label class="experience-row__detail">
+            Detalle de experiencia
+            <textarea class="experience-detail" rows="3" placeholder="Responsabilidades, logros, herramientas o contexto real de esta experiencia.">${escapeHtml(current.detail || "")}</textarea>
+          </label>
+        </div>
+      `);
+    }
+    el.experienceRows.innerHTML = rows.join("");
+  }
+
+  function getExperienceRowCount() {
+    return el.experienceRows ? el.experienceRows.querySelectorAll(".experience-row").length : 0;
+  }
+
+  function getManualExperienceDetails(options = {}) {
+    const includeEmpty = Boolean(options.includeEmpty);
+    if (!el.experienceRows) return [];
+    return Array.from(el.experienceRows.querySelectorAll(".experience-row"))
+      .map((row) => ({
+        company: row.querySelector(".experience-company").value.trim(),
+        role: row.querySelector(".experience-role").value.trim(),
+        dates: row.querySelector(".experience-dates").value.trim(),
+        detail: row.querySelector(".experience-detail").value.trim()
+      }))
+      .filter((item) => includeEmpty || item.company || item.role || item.dates || item.detail);
+  }
+
+  function emptyParsed() {
+    return {
+      name: "",
+      email: "",
+      phone: "",
+      linkedin: "",
+      title: "",
+      summary: "",
+      experiences: [],
+      education: [],
+      certifications: [],
+      skills: [],
+      languages: [],
+      additional: []
+    };
+  }
+
+  function emptyJob() {
+    return {
+      keywords: [],
+      missing: [],
+      technical: [],
+      soft: [],
+      verbs: [],
+      responsibilities: [],
+      seniority: "",
+      domain: "general"
+    };
+  }
+
+  function setupPdfWorker() {
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
+  }
+
+  async function handleUpload() {
+    const file = el.cvFile.files && el.cvFile.files[0];
+    if (!file) {
+      setStatus(el.fileStatus, "Choose a CV file first.", "warning");
+      return;
+    }
+
+    try {
+      setStatus(el.fileStatus, "Reading file in your browser...", "");
+      const text = await extractTextFromFile(file);
+      state.rawText = normalizeText(text);
+      state.sourceName = file.name;
+
+      if (state.rawText.length < 80) {
+        setStatus(
+          el.fileStatus,
+          "No pudimos extraer correctamente todo el contenido del archivo. Puedes corregir los datos manualmente o usar el formulario manual para obtener mejores resultados.",
+          "warning"
+        );
+      } else {
+        setStatus(el.fileStatus, `Processed ${file.name}. Review and correct the fields before analyzing.`, "success");
+      }
+
+      state.parsed = parseResume(state.rawText);
+      fillDetectedFields(state.parsed);
+    } catch (error) {
+      console.error(error);
+      setStatus(
+        el.fileStatus,
+        "No pudimos procesar correctamente este archivo. Puedes intentar subir un PDF/DOCX más simple o usar el formulario manual.",
+        "error"
+      );
+    }
+  }
+
+  async function extractTextFromFile(file) {
+    const ext = file.name.split(".").pop().toLowerCase();
+    const supported = ["pdf", "docx", "txt", "rtf", "html", "jpg", "jpeg", "png"];
+    if (!supported.includes(ext)) {
+      throw new Error("Unsupported file type");
+    }
+
+    if (ext === "pdf") return extractPdf(file);
+    if (ext === "docx") return extractDocx(file);
+    if (["jpg", "jpeg", "png"].includes(ext)) return extractImage(file);
+
+    const text = await file.text();
+    if (ext === "html") return stripHtml(text);
+    if (ext === "rtf") return stripRtf(text);
+    return text;
+  }
+
+  async function extractPdf(file) {
+    if (!window.pdfjsLib) throw new Error("PDF.js is not loaded");
+    setupPdfWorker();
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pages = [];
+
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+      const page = await pdf.getPage(pageNumber);
+      const content = await page.getTextContent();
+      pages.push(content.items.map((item) => item.str).join(" "));
+    }
+
+    const text = pages.join("\n\n");
+    if (text.trim().length < 50) {
+      throw new Error("Scanned PDF without readable text");
+    }
+    return text;
+  }
+
+  async function extractDocx(file) {
+    if (!window.mammoth) throw new Error("Mammoth.js is not loaded");
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await window.mammoth.extractRawText({ arrayBuffer });
+    if (!result.value || result.value.trim().length < 50) {
+      throw new Error("DOCX text extraction failed");
+    }
+    return result.value;
+  }
+
+  async function extractImage(file) {
+    if (!window.Tesseract) throw new Error("Tesseract.js is not loaded");
+    setStatus(el.fileStatus, "Running OCR. This may take a moment...", "");
+    const result = await window.Tesseract.recognize(file, "eng+spa", {
+      logger: (message) => {
+        if (message.status && typeof message.progress === "number") {
+          const pct = Math.round(message.progress * 100);
+          setStatus(el.fileStatus, `OCR ${message.status}: ${pct}%`, "");
+        }
+      }
+    });
+    return result.data.text || "";
+  }
+
+  function stripHtml(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body ? doc.body.innerText : html.replace(/<[^>]+>/g, " ");
+  }
+
+  function stripRtf(rtf) {
+    return rtf
+      .replace(/\\'[0-9a-fA-F]{2}/g, " ")
+      .replace(/\\[a-zA-Z]+-?\d* ?/g, " ")
+      .replace(/[{}]/g, " ")
+      .replace(/\s+/g, " ");
+  }
+
+  function normalizeText(text) {
+    return (text || "")
+      .replace(/\r/g, "\n")
+      .replace(/[•●▪◦]/g, "\n- ")
+      .replace(/\u00a0/g, " ")
+      .replace(/[ \t]+/g, " ")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  }
+
+  function parseResume(text) {
+    const parsed = emptyParsed();
+    parsed.email = extractEmail(text);
+    parsed.phone = extractPhone(text);
+    parsed.linkedin = extractLinkedIn(text);
+    parsed.name = extractName(text, parsed);
+    parsed.title = extractTitle(text, parsed.name);
+    parsed.summary = extractSectionText(text, ["summary", "profile", "professional summary", "perfil", "resumen", "extracto"], ["experience", "experiencia", "education", "educación", "skills", "habilidades"]) || "";
+    parsed.experiences = extractExperiences(text);
+    parsed.education = linesFromSection(text, ["education", "educación", "educacion", "academic", "formación", "formacion"], sectionHeadings);
+    parsed.certifications = linesFromSection(text, ["certifications", "certificaciones", "licenses", "licencias", "courses", "cursos"], sectionHeadings);
+    parsed.skills = extractSkills(text);
+    parsed.languages = extractLanguages(text);
+    parsed.additional = linesFromSection(text, ["additional information", "additional", "projects", "awards", "volunteer", "información adicional", "informacion adicional", "proyectos", "logros"], sectionHeadings);
+    return parsed;
+  }
+
+  function fillDetectedFields(parsed) {
+    if (parsed.name && !el.fullName.value.trim()) el.fullName.value = parsed.name;
+    if (parsed.email && !el.email.value.trim()) el.email.value = parsed.email;
+    if (parsed.phone && !el.phone.value.trim()) el.phone.value = parsed.phone;
+    if (parsed.linkedin && !el.linkedin.value.trim()) el.linkedin.value = parsed.linkedin;
+    if (parsed.title && !el.targetRole.value.trim()) el.targetRole.value = parsed.title;
+  }
+
+  function extractEmail(text) {
+    return (text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i) || [""])[0];
+  }
+
+  function extractPhone(text) {
+    const matches = text.match(/(?:\+?\d{1,3}[\s.-]?)?(?:\(?\d{2,4}\)?[\s.-]?)?\d{3,4}[\s.-]?\d{3,4}(?:[\s.-]?\d{1,4})?/g) || [];
+    return matches.find((item) => item.replace(/\D/g, "").length >= 7 && item.replace(/\D/g, "").length <= 15) || "";
+  }
+
+  function extractLinkedIn(text) {
+    const match = text.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[A-Za-z0-9_%./-]+/i);
+    return match ? (match[0].startsWith("http") ? match[0] : `https://${match[0]}`) : "";
+  }
+
+  function extractName(text, parsed) {
+    const lines = cleanLines(text).slice(0, 14);
+    const forbidden = /(curriculum|resume|cv|email|phone|tel|linkedin|github|portfolio|summary|profile|perfil|resumen|experiencia|experience|education|educación)/i;
+
+    for (const line of lines) {
+      if (forbidden.test(line) || line.includes("@") || /\d{3,}/.test(line)) continue;
+      const words = line.split(/\s+/).filter(Boolean);
+      if (words.length >= 2 && words.length <= 5 && line.length <= 70) {
+        const capitalized = words.filter((word) => /^[A-ZÁÉÍÓÚÑ][a-záéíóúñA-ZÁÉÍÓÚÑ.'-]+$/.test(word));
+        if (capitalized.length >= Math.min(2, words.length)) return titleCase(line);
+      }
+    }
+
+    if (parsed.email) {
+      const local = parsed.email.split("@")[0].replace(/[._-]+/g, " ");
+      const guessed = titleCase(local);
+      if (guessed.split(" ").length >= 2) return guessed;
+    }
+
+    return "";
+  }
+
+  function extractTitle(text, name) {
+    const lines = cleanLines(text).slice(0, 16);
+    const nameIndex = lines.findIndex((line) => name && cleanComparable(line) === cleanComparable(name));
+    const candidates = nameIndex >= 0 ? lines.slice(nameIndex + 1, nameIndex + 5) : lines.slice(0, 8);
+    const forbidden = /(@|linkedin|phone|tel|curriculum|resume|cv|\d{4})/i;
+    return candidates.find((line) => line.length > 4 && line.length < 80 && !forbidden.test(line)) || "";
+  }
+
+  function extractSectionText(text, startNames, endNames) {
+    const lines = text.split("\n");
+    let start = -1;
+    let end = lines.length;
+
+    for (let i = 0; i < lines.length; i += 1) {
+      if (isHeading(lines[i], startNames)) {
+        start = i + 1;
+        break;
+      }
+    }
+    if (start < 0) return "";
+
+    for (let i = start; i < lines.length; i += 1) {
+      if (isHeading(lines[i], endNames)) {
+        end = i;
+        break;
+      }
+    }
+    return lines.slice(start, end).join("\n").trim();
+  }
+
+  function linesFromSection(text, startNames, endNames) {
+    const section = extractSectionText(text, startNames, endNames);
+    return cleanLines(section).slice(0, 18);
+  }
+
+  function extractSkills(text) {
+    const sectionLines = linesFromSection(
+      text,
+      ["technical skills", "skills", "tools", "technologies", "habilidades técnicas", "habilidades tecnicas", "habilidades", "herramientas", "tecnologías", "tecnologias"],
+      sectionHeadings
+    );
+    const found = findKnownTerms(text, techTerms);
+    const fromSection = sectionLines
+      .flatMap((line) => splitList(line))
+      .filter((item) => item && !looksLikeLanguageLine(item));
+    return unique([...fromSection, ...found])
+      .filter((item) => !looksLikeLanguageLine(item))
+      .slice(0, 36);
+  }
+
+  function extractLanguages(text) {
+    const sectionLines = linesFromSection(text, ["languages", "idiomas"], sectionHeadings);
+    const scoped = sectionLines
+      .flatMap((line) => splitList(line))
+      .map(normalizeLanguageLine)
+      .filter(Boolean)
+      .filter(looksLikeLanguageLine);
+
+    if (scoped.length) return unique(scoped).slice(0, 8);
+
+    const scanned = cleanLines(text)
+      .filter((line) => line.length <= 90)
+      .map(normalizeLanguageLine)
+      .filter(Boolean)
+      .filter(looksLikeLanguageLine)
+      .filter((line) => !findKnownTerms(line, techTerms).length);
+
+    return unique(scanned).slice(0, 6);
+  }
+
+  function extractExperiences(text) {
+    const section = extractSectionText(
+      text,
+      ["professional experience", "work experience", "employment history", "experience", "experiencia profesional", "experiencia laboral", "experiencia"],
+      sectionHeadings
+    ) || text;
+
+    const blocks = buildExperienceBlocks(section);
+    const experiences = blocks.map(parseExperienceBlock).filter((item) => item.company || item.role || item.dates);
+    return dedupeExperiences(experiences).slice(0, 8);
+  }
+
+  function buildExperienceBlocks(section) {
+    const rawBlocks = section.split(/\n{2,}/).map((block) => block.trim()).filter((block) => block.length > 40);
+    const datedBlocks = rawBlocks.filter((block) => findDateRange(block));
+    if (datedBlocks.length >= 2) return datedBlocks;
+
+    const lines = section.split("\n").map((line) => line.trim()).filter(Boolean);
+    const dateIndexes = lines.map((line, index) => ({ line, index })).filter((item) => findDateRange(item.line)).map((item) => item.index);
+    if (!dateIndexes.length) return rawBlocks.slice(0, 4);
+
+    return dateIndexes.map((dateIndex, idx) => {
+      const start = Math.max(idx === 0 ? 0 : dateIndexes[idx - 1] + 1, dateIndex - 3);
+      const end = idx === dateIndexes.length - 1 ? Math.min(lines.length, dateIndex + 12) : Math.max(dateIndex + 1, dateIndexes[idx + 1] - 3);
+      return lines.slice(start, end).join("\n");
+    });
+  }
+
+  function parseExperienceBlock(block) {
+    const lines = cleanLines(block);
+    const dateLine = lines.find((line) => findDateRange(line)) || "";
+    const dates = findDateRange(block) || "";
+    const structured = parseStructuredExperience(lines, dates);
+    const nonBullets = lines
+      .filter((line) => !isBullet(line))
+      .filter((line) => !isHeading(line, ["functions", "funciones", "responsibilities", "responsabilidades"]))
+      .map(cleanExperienceLine)
+      .filter(Boolean);
+    const dateIndex = nonBullets.findIndex((line) => line === cleanExperienceLine(dateLine) || (dates && line.includes(dates)));
+    const aroundDate = dateIndex >= 0 ? nonBullets.slice(Math.max(0, dateIndex - 4), dateIndex + 3) : nonBullets.slice(0, 7);
+    const role = structured.role || guessRole(aroundDate, structured.company, dateLine);
+    const company = structured.company || guessCompany(aroundDate, role, dateLine);
+    const bullets = lines.filter(isBullet).map(cleanBullet).filter(Boolean).slice(0, 8);
+    const tools = findKnownTerms(block, techTerms);
+
+    return {
+      company,
+      role,
+      dates,
+      tools,
+      bullets,
+      raw: block
+    };
+  }
+
+  function parseStructuredExperience(lines, dates) {
+    for (const originalLine of lines) {
+      const cleanLine = cleanExperienceLine(originalLine);
+      if (!dates || !cleanLine.includes(dates)) continue;
+      const withoutDate = cleanExperienceLine(cleanLine.replace(dates, " "));
+      const parts = splitExperienceParts(withoutDate);
+      if (parts.length < 2) continue;
+
+      const roleIndex = parts.findIndex(looksLikeRole);
+      if (roleIndex >= 0) {
+        const company = parts.find((part, index) => index !== roleIndex && isCompanyCandidate(part));
+        if (company) return { company, role: parts[roleIndex] };
+      }
+
+      const company = parts.find(isCompanyCandidate);
+      const role = parts.find((part) => part !== company && part.length <= 90);
+      if (company && role) return { company, role };
+    }
+
+    const compactLines = lines.map(cleanExperienceLine).filter(Boolean);
+    for (let i = 0; i < compactLines.length; i += 1) {
+      if (!findDateRange(compactLines[i])) continue;
+      const before = compactLines.slice(Math.max(0, i - 3), i).filter((line) => !findDateRange(line));
+      const after = compactLines.slice(i + 1, i + 3).filter((line) => !findDateRange(line));
+      const context = [...before, ...after];
+      const role = context.find(looksLikeRole) || "";
+      const company = context.find((line) => line !== role && isCompanyCandidate(line)) || "";
+      if (company || role) return { company, role };
+    }
+
+    return { company: "", role: "" };
+  }
+
+  function guessCompany(lines, role, dateLine) {
+    const candidates = lines
+      .map(cleanExperienceLine)
+      .filter((line) => line && line !== dateLine && line !== role && line.length <= 100)
+      .filter((line) => !findDateRange(line) && !line.includes("@") && !isUrlLike(line));
+
+    const scored = candidates
+      .map((line) => ({ line, score: companyScore(line) }))
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score);
+
+    return scored.length ? scored[0].line : "";
+  }
+
+  function guessRole(lines, company, dateLine) {
+    const candidates = lines
+      .map(cleanExperienceLine)
+      .filter((line) => line && line !== dateLine && cleanComparable(line) !== cleanComparable(company))
+      .filter((line) => !findDateRange(line) && !line.includes("@") && !isUrlLike(line));
+    return candidates.find(looksLikeRole) || "";
+  }
+
+  function fallbackCompanyFromRaw(raw, role, dates) {
+    const lines = cleanLines(raw)
+      .map(cleanExperienceLine)
+      .filter(Boolean)
+      .filter((line) => line !== role && line !== dates && !findDateRange(line))
+      .filter((line) => !isUrlLike(line) && !line.includes("@") && !isHeading(line, sectionHeadings));
+
+    const parts = cleanLines(raw)
+      .flatMap((line) => splitExperienceParts(cleanExperienceLine(line.replace(dates || "", " "))))
+      .filter((part) => part !== role && !findDateRange(part));
+
+    const strict = [...parts, ...lines].find(isCompanyCandidate);
+    if (strict) return strict;
+
+    const scored = unique([...parts, ...lines])
+      .map((line) => ({ line, score: looseCompanyScore(line) }))
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score);
+
+    return scored.length ? scored[0].line : "";
+  }
+
+  function fallbackRoleFromRaw(raw, company, dates) {
+    const lines = cleanLines(raw)
+      .flatMap((line) => splitExperienceParts(cleanExperienceLine(line.replace(dates || "", " "))))
+      .filter(Boolean)
+      .filter((line) => line !== company && !findDateRange(line))
+      .filter((line) => !isUrlLike(line) && !line.includes("@") && !isHeading(line, sectionHeadings));
+
+    return lines.find(looksLikeRole) || "";
+  }
+
+  function analyzeCv() {
+    const validation = validateMinimumInputs();
+    if (!validation.ok) {
+      renderErrors([validation.message]);
+      return;
+    }
+
+    if (!state.rawText.trim()) {
+      state.rawText = buildRawTextFromVisibleInputs();
+      state.parsed = parseResume(state.rawText);
+    }
+
+    state.job = analyzeJobDescription(getJobDescription(), getTargetRole());
+    state.analysis = calculateAtsScore(state.rawText, state.parsed, state.job, getCandidate());
+    renderAnalysis(state.analysis, state.job);
+    el.generateBtn.disabled = false;
+  }
+
+  function validateMinimumInputs() {
+    const candidate = getCandidate();
+    if (!getTargetRole()) return { ok: false, message: "Falta puesto objetivo. Add the target role before analyzing." };
+    if (!getJobDescription()) return { ok: false, message: "Falta descripción de vacante. Paste the job description before analyzing." };
+    if (!candidate.name && !candidate.email && !candidate.phone && !state.rawText.trim()) {
+      return { ok: false, message: "Falta información mínima del usuario. Add your name, email, phone or upload/paste resume information." };
+    }
+    return { ok: true };
+  }
+
+  function analyzeJobDescription(description, targetRole) {
+    const text = normalizeText(`${targetRole}\n${description}`);
+    const technical = findKnownTerms(text, techTerms);
+    const soft = findKnownTerms(text, softSkills);
+    const verbs = extractActionTerms(text);
+    const frequent = extractFrequentTerms(text);
+    const responsibilities = extractResponsibilities(description);
+    const seniority = detectSeniority(text);
+    const domain = detectDomain(text);
+    const domainTools = domainLibrary[domain].fallbackTools;
+    const keywords = unique([...technical, ...soft, ...verbs, ...frequent, ...domainTools]).slice(0, 38);
+    const source = cleanComparable(`${state.rawText} ${Object.values(getCandidate()).join(" ")}`);
+    const missing = keywords.filter((keyword) => !source.includes(cleanComparable(keyword))).slice(0, 22);
+
+    return {
+      keywords,
+      missing,
+      technical,
+      soft,
+      verbs,
+      responsibilities,
+      seniority,
+      domain
+    };
+  }
+
+  function calculateAtsScore(rawText, parsed, job, candidate) {
+    const text = cleanComparable(rawText);
+    const keywordCoverage = job.keywords.length
+      ? (job.keywords.length - job.missing.length) / job.keywords.length
+      : 0;
+    const structureHits = [
+      /(experience|experiencia)/i.test(rawText),
+      /(education|educación|formación)/i.test(rawText),
+      /(skills|habilidades|herramientas|technologies)/i.test(rawText),
+      /(certifications|certificaciones|courses|cursos)/i.test(rawText)
+    ].filter(Boolean).length;
+    const contactHits = [candidate.name || parsed.name, candidate.email || parsed.email, candidate.phone || parsed.phone, candidate.linkedin || parsed.linkedin].filter(Boolean).length;
+    const measurable = (rawText.match(/\b\d+%|\b\d+\s?(users|usuarios|people|personas|projects|proyectos|hours|horas|days|días|usd|\$)/gi) || []).length;
+    const actions = [...actionVerbs.en, ...actionVerbs.es].filter((verb) => text.includes(cleanComparable(verb))).length;
+    const roleTerms = getTargetRole().split(/\s+/).filter((word) => word.length > 3);
+    const roleAlignment = roleTerms.filter((word) => text.includes(cleanComparable(word))).length / Math.max(roleTerms.length, 1);
+
+    const criteria = [
+      { name: "Contact data", points: Math.min(10, contactHits * 2.5), max: 10, detail: `${contactHits}/4 contact fields detected or provided.` },
+      { name: "Standard structure", points: Math.min(15, structureHits * 3.75), max: 15, detail: `${structureHits}/4 standard sections found.` },
+      { name: "Job keyword match", points: Math.round(keywordCoverage * 20), max: 20, detail: `${Math.round(keywordCoverage * 100)}% of detected JD keywords appear in the resume.` },
+      { name: "Measurable achievements", points: Math.min(10, measurable * 3.4), max: 10, detail: `${measurable} measurable result signals found.` },
+      { name: "Format compatibility", points: rawText.length > 120 ? 10 : 4, max: 10, detail: "Simple extracted text is more likely to be ATS-friendly." },
+      { name: "Relevant skills", points: Math.min(10, parsed.skills.length * 1.2 + job.technical.filter((term) => text.includes(cleanComparable(term))).length), max: 10, detail: `${parsed.skills.length} skills/tools detected.` },
+      { name: "Action verbs", points: Math.min(10, actions * 1.4), max: 10, detail: `${actions} action verb signals found.` },
+      { name: "Target role coherence", points: Math.round(roleAlignment * 10), max: 10, detail: "Compares the target role terms against the source CV." },
+      { name: "Professional experience", points: Math.min(5, parsed.experiences.length * 2.5), max: 5, detail: `${parsed.experiences.length} experience blocks detected.` }
+    ];
+
+    const score = Math.max(18, Math.min(98, Math.round(criteria.reduce((sum, item) => sum + item.points, 0))));
+    const issues = buildIssues(score, criteria, job, parsed, candidate);
+    const suggestions = buildSuggestions(job, criteria, parsed);
+
+    return { score, criteria, issues, suggestions };
+  }
+
+  function buildIssues(score, criteria, job, parsed, candidate) {
+    const issues = [];
+    if (score < 60) issues.push("The original CV may need clearer structure, stronger role alignment and more JD keywords.");
+    if (!candidate.name && !parsed.name) issues.push("Name was not detected. The generated CV will use a placeholder that must be replaced.");
+    if (!candidate.email && !parsed.email) issues.push("Email is missing. ATS and recruiters usually expect visible contact information.");
+    if (!candidate.phone && !parsed.phone) issues.push("Phone number is missing. Add it if you want it included in the header.");
+    if (parsed.experiences.length < 2) issues.push("Few real experience blocks were detected. The optimized resume may include editable template experiences.");
+    if (job.missing.length > 6) issues.push("Several job-description keywords are missing from the original CV. Use only the ones that reflect real experience.");
+    const weakCriteria = criteria.filter((item) => item.points / item.max < 0.45).map((item) => item.name);
+    if (weakCriteria.length) issues.push(`Weak areas detected: ${weakCriteria.join(", ")}.`);
+    return issues;
+  }
+
+  function buildSuggestions(job, criteria, parsed) {
+    const suggestions = [
+      "Use keywords only where they honestly reflect your experience, tools or responsibilities.",
+      "Replace every suggested metric, company, role, date or tool marked with '(Colocar aquí la información verdadera)' before using the CV.",
+      "Keep the final document simple: one column, standard headings, no icons, no progress bars and no complex tables."
+    ];
+
+    if (job.missing.length) {
+      suggestions.push(`Review missing keywords such as ${job.missing.slice(0, 8).join(", ")} and add the truthful ones into experience bullets or technical skills.`);
+    }
+    if (parsed.experiences.length < 4) {
+      suggestions.push("Because the parser found limited experience detail, review the generated template experiences carefully and replace placeholders with real information.");
+    }
+    if (criteria.some((item) => item.name === "Measurable achievements" && item.points < 6)) {
+      suggestions.push("Add measurable outcomes where truthful: percentages, time saved, volume handled, quality improvement or scope.");
+    }
+    return suggestions;
+  }
+
+  function renderAnalysis(analysis, job) {
+    el.atsScore.textContent = String(analysis.score);
+    el.scoreTitle.textContent = analysis.score >= 80 ? "Strong original CV foundation" : analysis.score >= 60 ? "Good foundation with gaps" : "Needs stronger ATS structure";
+
+    el.criteriaList.innerHTML = analysis.criteria.map((item) => `
+      <li><strong>${escapeHtml(item.name)}:</strong> ${Math.round(item.points)}/${item.max} - ${escapeHtml(item.detail)}</li>
+    `).join("");
+
+    renderErrors(analysis.issues, "warning");
+    renderTags(el.keywordsDetected, job.keywords);
+    renderTags(el.missingKeywords, job.missing);
+    el.suggestionsList.innerHTML = analysis.suggestions.map((item) => `<p>${escapeHtml(item)}</p>`).join("");
+  }
+
+  function renderErrors(messages, type = "error") {
+    el.issuesList.innerHTML = messages.map((message) => `
+      <div class="alert alert--${type === "warning" ? "warning" : "error"}"><strong>${type === "warning" ? "Notice" : "Action needed"}:</strong> ${escapeHtml(message)}</div>
+    `).join("");
+  }
+
+  function renderTags(container, tags) {
+    container.innerHTML = tags && tags.length
+      ? tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")
+      : `<span class="muted">No items yet.</span>`;
+  }
+
+  function generateOptimizedCv() {
+    const validation = validateMinimumInputs();
+    if (!validation.ok) {
+      renderErrors([validation.message]);
+      return;
+    }
+    if (!state.analysis) analyzeCv();
+
+    const language = getLanguage();
+    const candidate = getCandidate();
+    const job = state.job.keywords.length ? state.job : analyzeJobDescription(getJobDescription(), getTargetRole());
+    const parsed = mergeParsedWithManual(state.parsed);
+    const domain = domainLibrary[job.domain] || domainLibrary.general;
+    const sourceText = cleanComparable(state.rawText);
+    const profile = buildOptimizedProfile(candidate, parsed, job, domain, language);
+    const experiences = buildOptimizedExperiences(parsed, job, domain, language, sourceText, getManualExperienceDetails());
+
+    state.optimized = {
+      language,
+      candidate,
+      profile,
+      experiences,
+      skills: buildTechnicalSkills(parsed, job, domain, sourceText, language),
+      education: ensureList(parsed.education, language === "es" ? [`Educación ${MARKER}`] : [`Education ${MARKER}`]),
+      certifications: ensureList(parsed.certifications, language === "es" ? [`Certificación relevante ${MARKER}`] : [`Relevant certification ${MARKER}`]),
+      languages: ensureList(parsed.languages, language === "es" ? [`Idioma y nivel ${MARKER}`] : [`Language and level ${MARKER}`]),
+      additional: ensureList(parsed.additional, language === "es" ? [`Información adicional relevante ${MARKER}`] : [`Relevant additional information ${MARKER}`])
+    };
+
+    el.resumeEditor.innerHTML = renderResumeHtml(state.optimized);
+    el.downloadBtn.disabled = false;
+    el.optimizedScoreBadge.textContent = `Optimized score: ${estimateOptimizedScore(state.optimized, job)}/100`;
+    document.getElementById("editor").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function mergeParsedWithManual(parsed) {
+    const merged = structuredCloneSafe(parsed);
+    const manual = {
+      summary: el.manualSummary.value.trim(),
+      experience: el.manualExperience.value.trim(),
+      education: el.manualEducation.value.trim(),
+      certifications: el.manualCertifications.value.trim(),
+      skills: el.manualSkills.value.trim(),
+      languages: el.manualLanguages.value.trim(),
+      additional: el.manualAdditional.value.trim()
+    };
+
+    if (manual.summary) merged.summary = manual.summary;
+    if (manual.experience) merged.experiences = extractExperiences(manual.experience);
+    if (manual.education) merged.education = cleanLines(manual.education);
+    if (manual.certifications) merged.certifications = cleanLines(manual.certifications);
+    if (manual.skills) merged.skills = splitList(manual.skills).filter((item) => !looksLikeLanguageLine(item));
+    if (manual.languages) merged.languages = splitList(manual.languages).map(normalizeLanguageLine).filter(looksLikeLanguageLine);
+    if (manual.additional) merged.additional = cleanLines(manual.additional);
+    return merged;
+  }
+
+  function buildOptimizedProfile(candidate, parsed, job, domain, language) {
+    const role = translateRole(getTargetRole() || domain[language].role, language);
+    const keywordPhrase = job.keywords.slice(0, 8).join(", ");
+    const seniority = job.seniority ? `${job.seniority} ` : "";
+    const baseExperience = parsed.summary ? summarizeText(parsed.summary, 34) : "";
+
+    if (language === "en") {
+      return [
+        `${seniority}${role} profile focused on ${keywordPhrase || "role-relevant responsibilities"}, with experience organizing work, collaborating with stakeholders and delivering practical outcomes.`,
+        baseExperience ? `Source background: ${simpleTranslate(baseExperience, "en")}.` : `Complete years of experience, industries and scope ${MARKER}.`,
+        "(Complete with relevant information and try to use the keywords in this paragraph)"
+      ].join(" ");
+    }
+
+    return [
+      `Perfil de ${role} enfocado en ${keywordPhrase || "responsabilidades relevantes del puesto"}, con experiencia organizando trabajo, colaborando con stakeholders y entregando resultados prácticos.`,
+      baseExperience ? `Contexto de experiencia: ${simpleTranslate(baseExperience, "es")}.` : `Completa años de experiencia, industrias y alcance ${MARKER}.`,
+      "(Completa con información relevante e intenta utilizar las palabras clave en este párrafo)"
+    ].join(" ");
+  }
+
+  function buildOptimizedExperiences(parsed, job, domain, language, sourceText, manualDetails = []) {
+    const parsedExperiences = parsed.experiences || [];
+    const detected = manualDetails.length
+      ? manualDetails.map((detail, index) => ({
+        ...(parsedExperiences[index] || {}),
+        company: detail.company,
+        role: detail.role,
+        dates: detail.dates,
+        raw: detail.detail || (parsedExperiences[index] || {}).raw || "",
+        bullets: detail.detail ? detail.detail.split(/\n+/).map(cleanBullet).filter(Boolean) : ((parsedExperiences[index] || {}).bullets || []),
+        explicitIdentity: true
+      }))
+      : parsedExperiences;
+    const enoughReal = detected.length >= 4;
+    const experiences = enoughReal
+      ? detected.slice(0, 6).map((experience, index) => buildExperience(experience, index, job, domain, language, sourceText, false))
+      : detected.map((experience, index) => buildExperience(experience, index, job, domain, language, sourceText, false));
+
+    while (experiences.length < 4) {
+      experiences.push(buildTemplateExperience(experiences.length, job, domain, language));
+    }
+    return experiences;
+  }
+
+  function buildExperience(experience, index, job, domain, language, sourceText, isTemplate) {
+    const labels = labelsFor(language);
+    const raw = experience.raw || "";
+    const useExplicitIdentity = Boolean(experience.explicitIdentity);
+    const realDates = useExplicitIdentity ? experience.dates : (experience.dates || findDateRange(raw));
+    const realRole = useExplicitIdentity ? experience.role : (experience.role || fallbackRoleFromRaw(raw, experience.company, realDates));
+    const realCompany = useExplicitIdentity ? experience.company : (experience.company || fallbackCompanyFromRaw(raw, realRole, realDates));
+    const selectedTools = selectTools(experience.tools, job, domain, sourceText, isTemplate, index, raw);
+    const outline = buildExperienceOutline(index, job, domain, language, {
+      ...experience,
+      company: realCompany,
+      role: realRole,
+      dates: realDates,
+      raw
+    }, selectedTools);
+    const functions = generateFunctions(index, selectedTools, job, domain, language, sourceText, isTemplate, {
+      ...experience,
+      company: realCompany,
+      role: realRole,
+      dates: realDates,
+      raw
+    });
+    const sbi = generateSbi(index, job, domain, language);
+    const company = realCompany
+      ? realCompany.toUpperCase()
+      : language === "es"
+        ? `EMPRESA ${MARKER}`
+        : `COMPANY ${MARKER}`;
+    const role = realRole || translateRole(getTargetRole() || domain[language].role, language) || (language === "es" ? `Cargo ${MARKER}` : `Role ${MARKER}`);
+    const dates = realDates || (language === "es" ? `Mes Año - Presente ${MARKER}` : `Month Year - Present ${MARKER}`);
+
+    return {
+      company,
+      role,
+      dates: simpleTranslateDate(dates, language),
+      tools: selectedTools,
+      outline,
+      functions,
+      sbi,
+      labels
+    };
+  }
+
+  function buildTemplateExperience(index, job, domain, language) {
+    const labels = labelsFor(language);
+    const selectedTools = selectTools([], job, domain, "", true, index, "");
+    const outline = buildExperienceOutline(index, job, domain, language, {
+      bullets: [],
+      raw: "",
+      role: translateRole(getTargetRole() || domain[language].role, language)
+    }, selectedTools);
+    const functions = generateFunctions(index, selectedTools, job, domain, language, "", true, {
+      bullets: [],
+      raw: "",
+      role: translateRole(getTargetRole() || domain[language].role, language)
+    });
+    const sbi = generateSbi(index, job, domain, language);
+    const targetRole = translateRole(getTargetRole() || domain[language].role, language);
+
+    return {
+      company: language === "es"
+        ? "EMPRESA (Colocar el nombre de la empresa donde trabajaste)"
+        : "COMPANY (Enter the company name where you worked)",
+      role: language === "es"
+        ? `Cargo (Colocar el cargo que desempeñaste)${targetRole ? ` - ${targetRole}` : ""}`
+        : `Role (Enter the role you performed)${targetRole ? ` - ${targetRole}` : ""}`,
+      dates: language === "es"
+        ? "Mes Año - Presente (Colocar aquí la fecha en la que trabajaste)"
+        : "Month Year - Present (Enter the dates you worked here)",
+      tools: selectedTools,
+      outline,
+      functions,
+      sbi,
+      labels
+    };
+  }
+
+  function buildExperienceOutline(index, job, domain, language, experience, tools) {
+    const focus = experienceFocus(index, language);
+    const role = translateRole(experience.role || getTargetRole() || domain[language].role, language);
+    const cleanTools = tools
+      .map((tool) => localizeSkillName(tool.replace(MARKER, "").trim(), language))
+      .filter(Boolean)
+      .slice(0, 3)
+      .join(", ");
+    const focusTerms = keywordWindow(job.keywords, index, 3)
+      .map((keyword) => localizeKeyword(keyword, language))
+      .filter(Boolean)
+      .join(", ");
+
+    if (language === "en") {
+      return `Support ${focus.label} for the ${role} scope, using ${cleanTools || "role-relevant tools"} to address ${focusTerms || "priority job requirements"} with clear, measurable execution.`;
+    }
+
+    return `Apoyar ${focus.label} dentro del alcance de ${role}, usando ${cleanTools || "herramientas relevantes"} para cubrir ${focusTerms || "requisitos prioritarios del puesto"} con ejecución clara y medible.`;
+  }
+
+  function selectTools(existingTools, job, domain, sourceText, isTemplate, index, experienceRaw) {
+    const rawTools = findKnownTerms(experienceRaw || "", techTerms);
+    const confirmedTools = unique([...(existingTools || []), ...rawTools]).filter((tool) => !looksLikeLanguageLine(tool));
+    const jdTools = unique([...job.technical, ...domain.fallbackTools]).filter((tool) => !looksLikeLanguageLine(tool));
+    const rotatedTools = rotateList(jdTools, index * 2);
+    const desiredCount = confirmedTools.length ? 5 : 4;
+    const selected = unique([...confirmedTools.slice(0, 3), ...rotatedTools]).slice(0, desiredCount);
+    const fallback = rotateList(domain.fallbackTools, index).slice(0, 4);
+
+    return (selected.length ? selected : fallback).map((tool) => {
+      const confirmed = !isTemplate && (knownTermInText(sourceText, tool) || knownTermInText(cleanComparable(experienceRaw || ""), tool));
+      return confirmed ? tool : `${tool} ${MARKER}`;
+    });
+  }
+
+  function generateFunctions(index, tools, job, domain, language, sourceText, isTemplate, experience) {
+    const focus = experienceFocus(index, language);
+    const templates = domain[language].functions;
+    const orderedDomain = rotateList(templates, index + focus.offset);
+    const selected = unique([...focus.functions, ...sourceBulletFunctions(experience, language), ...jobResponsibilityFunctions(job, index, language, focus), ...orderedDomain]).slice(0, 5);
+    const cleanTools = tools.map((tool) => tool.replace(MARKER, "").trim()).slice(0, 4).join(", ");
+    const metric = metricFor(index, language);
+    const keywords = keywordWindow(job.keywords, index, 4).map((keyword) => localizeKeyword(keyword, language)).join(", ");
+
+    return selected.map((template, templateIndex) => {
+      let sentence = template
+        .replace("{tools}", cleanTools || domain.fallbackTools.slice(0, 3).join(", "))
+        .replace("{focus}", focus.label)
+        .replace("{metric}", metric)
+        .replace("{marker}", MARKER)
+        .replace("{keywords}", keywords);
+
+      if (isTemplate && !sentence.includes(MARKER)) sentence += ` ${MARKER}`;
+      if (!isTemplate && templateIndex < 3 && !sentence.includes(MARKER) && usesUnconfirmedTerm(sentence, sourceText, job)) sentence += ` ${MARKER}`;
+      return cleanupSentence(sentence);
+    }).filter(Boolean).slice(0, 6);
+  }
+
+  function experienceFocus(index, language) {
+    const themes = {
+      en: [
+        {
+          label: "core role responsibilities",
+          offset: 0,
+          functions: [
+            "Delivered core role responsibilities connected to {keywords}, prioritizing relevant outputs and consistent execution.",
+            "Translated role requirements into practical work routines, deliverables and follow-up actions aligned with the vacancy."
+          ]
+        },
+        {
+          label: "tools, automation and process execution",
+          offset: 1,
+          functions: [
+            "Implemented workflows with {tools} to support reporting, tracking, automation or operational visibility {marker}.",
+            "Standardized technical procedures, controls and reusable work materials related to {keywords} {marker}."
+          ]
+        },
+        {
+          label: "stakeholders, communication and documentation",
+          offset: 2,
+          functions: [
+            "Coordinated with stakeholders and cross-functional teams to validate requirements, priorities and expected outcomes.",
+            "Documented decisions, assumptions, requirements and status updates to improve clarity and continuity."
+          ]
+        },
+        {
+          label: "continuous improvement, metrics and results",
+          offset: 3,
+          functions: [
+            "Monitored gaps, risks and improvement opportunities related to {keywords}, proposing measurable actions {marker}.",
+            "Improved quality, speed or accuracy by {metric} through structured follow-up and continuous improvement practices {marker}."
+          ]
+        },
+        {
+          label: "quality, validation and governance",
+          offset: 4,
+          functions: [
+            "Validated deliverables, data, processes or documentation to reduce errors and strengthen execution quality.",
+            "Defined controls and review routines that supported reliability, traceability and better team coordination {marker}."
+          ]
+        }
+      ],
+      es: [
+        {
+          label: "responsabilidades principales del rol",
+          offset: 0,
+          functions: [
+            "Ejecuté responsabilidades principales conectadas con {keywords}, priorizando entregables relevantes y ejecución consistente.",
+            "Convertí requerimientos del rol en rutinas de trabajo, entregables y acciones de seguimiento alineadas a la vacante."
+          ]
+        },
+        {
+          label: "herramientas, automatización y ejecución de procesos",
+          offset: 1,
+          functions: [
+            "Implementé flujos de trabajo con {tools} para apoyar reportería, seguimiento, automatización o visibilidad operativa {marker}.",
+            "Estandaricé procedimientos técnicos, controles y materiales reutilizables relacionados con {keywords} {marker}."
+          ]
+        },
+        {
+          label: "stakeholders, comunicación y documentación",
+          offset: 2,
+          functions: [
+            "Coordiné con stakeholders y equipos transversales para validar requerimientos, prioridades y resultados esperados.",
+            "Documenté decisiones, supuestos, requerimientos y avances para mejorar claridad y continuidad."
+          ]
+        },
+        {
+          label: "mejora continua, métricas y resultados",
+          offset: 3,
+          functions: [
+            "Monitoreé brechas, riesgos y oportunidades de mejora relacionadas con {keywords}, proponiendo acciones medibles {marker}.",
+            "Mejoré calidad, velocidad o precisión en {metric} mediante seguimiento estructurado y prácticas de mejora continua {marker}."
+          ]
+        },
+        {
+          label: "calidad, validación y gobierno",
+          offset: 4,
+          functions: [
+            "Validé entregables, datos, procesos o documentación para reducir errores y fortalecer la calidad de ejecución.",
+            "Definí controles y rutinas de revisión que apoyaron confiabilidad, trazabilidad y mejor coordinación del equipo {marker}."
+          ]
+        }
+      ]
+    };
+
+    const list = themes[language] || themes.es;
+    return list[index % list.length];
+  }
+
+  function sourceBulletFunctions(experience, language) {
+    const bullets = (experience.bullets || [])
+      .map((bullet) => cleanupSentence(simpleTranslate(cleanBullet(bullet), language)))
+      .filter((bullet) => bullet.length > 18 && bullet.length < 190)
+      .slice(0, 1);
+    return bullets;
+  }
+
+  function jobResponsibilityFunctions(job, index, language, focus) {
+    if (!job.responsibilities || !job.responsibilities.length) return [];
+    const responsibility = cleanupResponsibility(summarizeText(job.responsibilities[index % job.responsibilities.length], 18));
+    if (!responsibility) return [];
+
+    if (language === "en") {
+      return [`Supported ${focus.label} work related to "${simpleTranslate(responsibility, "en")}" while adapting execution to the real scope of this role ${MARKER}.`];
+    }
+
+    return [`Apoyé actividades de ${focus.label} relacionadas con "${simpleTranslate(responsibility, "es")}" adaptando la ejecución al alcance real de este rol ${MARKER}.`];
+  }
+
+  function cleanupResponsibility(text) {
+    return cleanupSentence(text)
+      .replace(/\s+(and|or|y|o|with|con|de)$/i, "")
+      .replace(/[,:;.-]+$/g, "")
+      .trim();
+  }
+
+  function localizeKeyword(keyword, language) {
+    if (language !== "es") return simpleTranslate(keyword, "en");
+    const map = {
+      Managed: "Gestión",
+      Led: "Liderazgo",
+      Designed: "Diseño",
+      Implemented: "Implementación",
+      Coordinated: "Coordinación",
+      Optimized: "Optimización",
+      Automated: "Automatización",
+      Analyzed: "Análisis",
+      Developed: "Desarrollo",
+      Improved: "Mejora",
+      Delivered: "Entrega",
+      Monitored: "Monitoreo",
+      Documented: "Documentación",
+      Standardized: "Estandarización",
+      Built: "Construcción",
+      Integrated: "Integración",
+      Supported: "Soporte",
+      Defined: "Definición",
+      Evaluated: "Evaluación",
+      Streamlined: "Agilización",
+      Data: "Datos",
+      Reporting: "Reportería"
+    };
+    return map[keyword] || simpleTranslate(keyword, "es");
+  }
+
+  function localizeSkillName(skill, language) {
+    const cleanSkill = cleanupSentence((skill || "").replace(MARKER, "").trim());
+    const canonicalTech = canonicalTechTerm(cleanSkill);
+    if (canonicalTech) return canonicalTech;
+    const toSpanish = {
+      Documentation: "Documentación",
+      Reporting: "Reportería",
+      "Process Improvement": "Mejora de procesos",
+      Microservices: "Microservicios",
+      "Stakeholder Management": "Gestión de stakeholders",
+      "Data Quality": "Calidad de datos",
+      "Project Planning": "Planificación de proyectos",
+      "Risk Management": "Gestión de riesgos"
+    };
+    const toEnglish = {
+      "Documentación": "Documentation",
+      "Documentacion": "Documentation",
+      "Reportería": "Reporting",
+      "Reporteria": "Reporting",
+      "Mejora de procesos": "Process Improvement",
+      "Microservicios": "Microservices",
+      "Gestión de stakeholders": "Stakeholder Management",
+      "Gestion de stakeholders": "Stakeholder Management",
+      "Calidad de datos": "Data Quality",
+      "Planificación de proyectos": "Project Planning",
+      "Planificacion de proyectos": "Project Planning",
+      "Gestión de riesgos": "Risk Management",
+      "Gestion de riesgos": "Risk Management",
+      "Análisis de datos": "Data Analysis",
+      "Analisis de datos": "Data Analysis",
+      "Visualización de datos": "Data Visualization",
+      "Visualizacion de datos": "Data Visualization",
+      "Modelado de datos": "Data Modeling",
+      "Bases de datos": "Databases",
+      "Dashboards": "Dashboards",
+      "Tableros": "Dashboards",
+      "Indicadores": "KPIs",
+      "KPIs": "KPIs",
+      "Automatización": "Automation",
+      "Automatizacion": "Automation",
+      "Automatización de reportes": "Report Automation",
+      "Automatizacion de reportes": "Report Automation",
+      "Levantamiento de requerimientos": "Requirements Gathering",
+      "Gestión de requerimientos": "Requirements Management",
+      "Gestion de requerimientos": "Requirements Management",
+      "Requerimientos": "Requirements",
+      "Documentación funcional": "Functional Documentation",
+      "Documentacion funcional": "Functional Documentation",
+      "Metodologías ágiles": "Agile Methodologies",
+      "Metodologias agiles": "Agile Methodologies",
+      "Gestión de proyectos": "Project Management",
+      "Gestion de proyectos": "Project Management",
+      "Comunicación": "Communication",
+      "Comunicacion": "Communication",
+      "Liderazgo": "Leadership",
+      "Colaboración": "Collaboration",
+      "Colaboracion": "Collaboration",
+      "Resolución de problemas": "Problem Solving",
+      "Resolucion de problemas": "Problem Solving",
+      "Pensamiento analítico": "Analytical Thinking",
+      "Pensamiento analitico": "Analytical Thinking",
+      "Pruebas funcionales": "Functional Testing",
+      "Pruebas automatizadas": "Test Automation",
+      "Automatización de pruebas": "Test Automation",
+      "Automatizacion de pruebas": "Test Automation",
+      "Casos de prueba": "Test Cases",
+      "Pruebas de regresión": "Regression Testing",
+      "Pruebas de regresion": "Regression Testing",
+      "Pruebas API": "API Testing",
+      "Reporte de defectos": "Defect Reporting"
+    };
+    return language === "es"
+      ? (toSpanish[cleanSkill] || cleanSkill)
+      : (toEnglish[cleanSkill] || translateSkillPhraseToEnglish(cleanSkill));
+  }
+
+  function canonicalTechTerm(skill) {
+    const key = cleanComparable(skill);
+    return techTerms.find((term) => cleanComparable(term) === key) || "";
+  }
+
+  function translateSkillPhraseToEnglish(skill) {
+    const replacements = [
+      [/\banálisis\b/gi, "analysis"],
+      [/\banalisis\b/gi, "analysis"],
+      [/\bdatos\b/gi, "data"],
+      [/\breportería\b/gi, "reporting"],
+      [/\breporteria\b/gi, "reporting"],
+      [/\breportes\b/gi, "reports"],
+      [/\bdocumentación\b/gi, "documentation"],
+      [/\bdocumentacion\b/gi, "documentation"],
+      [/\bmejora\b/gi, "improvement"],
+      [/\bprocesos\b/gi, "processes"],
+      [/\bproyectos\b/gi, "projects"],
+      [/\bgestión\b/gi, "management"],
+      [/\bgestion\b/gi, "management"],
+      [/\bcalidad\b/gi, "quality"],
+      [/\brequerimientos\b/gi, "requirements"],
+      [/\bautomatización\b/gi, "automation"],
+      [/\bautomatizacion\b/gi, "automation"],
+      [/\bpruebas\b/gi, "testing"],
+      [/\bfuncionales\b/gi, "functional"],
+      [/\bfuncional\b/gi, "functional"],
+      [/\bcomunicación\b/gi, "communication"],
+      [/\bcomunicacion\b/gi, "communication"],
+      [/\bliderazgo\b/gi, "leadership"],
+      [/\bcolaboración\b/gi, "collaboration"],
+      [/\bcolaboracion\b/gi, "collaboration"],
+      [/\bvisualización\b/gi, "visualization"],
+      [/\bvisualizacion\b/gi, "visualization"],
+      [/\bmodelado\b/gi, "modeling"],
+      [/\bbases\b/gi, "databases"],
+      [/\bindicadores\b/gi, "KPIs"],
+      [/\btableros\b/gi, "dashboards"],
+      [/\bde\b/gi, "of"],
+      [/\by\b/gi, "and"]
+    ];
+    const translated = replacements.reduce((value, [regex, replacement]) => value.replace(regex, replacement), skill);
+    return titleCase(translated.replace(/\s+/g, " ").trim());
+  }
+
+  function keywordWindow(items, index, size) {
+    const list = items && items.length ? items : [];
+    if (!list.length) return [];
+    return rotateList(list, index * 2).slice(0, size);
+  }
+
+  function rotateList(items, offset) {
+    const list = (items || []).filter(Boolean);
+    if (!list.length) return [];
+    const start = ((offset % list.length) + list.length) % list.length;
+    return [...list.slice(start), ...list.slice(0, start)];
+  }
+
+  function generateSbi(index, job, domain, language) {
+    const template = domain[language].sbi;
+    const metric = metricFor(index + 2, language);
+    const values = template.map((line) => line.replace("{metric}", metric).replace("{marker}", MARKER));
+    if (language === "es") {
+      return {
+        situation: values[0],
+        behavior: values[1],
+        impact: values[2]
+      };
+    }
+    return {
+      situation: values[0],
+      behavior: values[1],
+      impact: values[2]
+    };
+  }
+
+  function buildTechnicalSkills(parsed, job, domain, sourceText, language) {
+    const skills = unique([...(parsed.skills || []), ...job.technical, ...domain.fallbackTools])
+      .filter((item) => item.length <= 42)
+      .filter((item) => !looksLikeLanguageLine(item))
+      .filter((item) => !isHeading(item, sectionHeadings))
+      .slice(0, 28);
+    return skills.map((skill) => {
+      const localized = localizeSkillName(skill, language);
+      return sourceText.includes(cleanComparable(skill)) ? localized : `${localized} ${MARKER}`;
+    });
+  }
+
+  function estimateOptimizedScore(resume, job) {
+    const hasContact = [resume.candidate.name, resume.candidate.email, resume.candidate.phone, resume.candidate.linkedin].filter(Boolean).length;
+    const keywordCount = job.keywords.length;
+    const score = 91 + Math.min(6, hasContact) + Math.min(3, Math.floor(keywordCount / 8));
+    return Math.min(99, score);
+  }
+
+  function renderResumeHtml(resume) {
+    const language = resume.language;
+    const labels = labelsFor(language);
+    const candidate = resume.candidate;
+    const name = candidate.name || `Nombre completo ${MARKER}`;
+    const role = translateRole(getTargetRole(), language) || labels.targetRolePlaceholder;
+    const contact = [candidate.email, candidate.phone, candidate.linkedin].filter(Boolean).join(" | ");
+
+    return `
+      <h1>${escapeHtml(name)}</h1>
+      <p class="resume-title"><strong>${escapeHtml(role)}</strong></p>
+      <p class="resume-contact">${escapeHtml(contact || labels.contactPlaceholder)}</p>
+
+      <h2>${labels.summary}</h2>
+      <p>${escapeHtml(resume.profile)}</p>
+
+      <h2>${labels.experience}</h2>
+      ${resume.experiences.map((experience) => renderExperienceHtml(experience, language)).join("")}
+
+      <h2>${labels.technicalSkills}</h2>
+      <p>${escapeHtml(resume.skills.join(", "))}</p>
+
+      <h2>${labels.education}</h2>
+      ${renderSimpleList(resume.education)}
+
+      <h2>${labels.certifications}</h2>
+      ${renderSimpleList(resume.certifications)}
+
+      <h2>${labels.languages}</h2>
+      ${renderSimpleList(resume.languages)}
+
+      <h2>${labels.additional}</h2>
+      ${renderSimpleList(resume.additional)}
+    `;
+  }
+
+  function renderExperienceHtml(experience, language) {
+    const labels = labelsFor(language);
+    return `
+      <div class="experience-block">
+        <p class="company"><strong>${escapeHtml(experience.company)}</strong></p>
+        <p><strong>${escapeHtml(experience.role)}</strong></p>
+        <p>${escapeHtml(experience.dates)}</p>
+        <p><strong>${labels.toolsLabel}:</strong> ${escapeHtml(experience.tools.join(", "))}.</p>
+        <p><strong>${labels.outline}:</strong> ${escapeHtml(experience.outline)}</p>
+        <p><strong>${labels.functions}</strong></p>
+        <ul>
+          ${experience.functions.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        </ul>
+        <p><strong>${labels.situation}:</strong> ${escapeHtml(experience.sbi.situation)}</p>
+        <p><strong>${labels.behavior}:</strong> ${escapeHtml(experience.sbi.behavior)}</p>
+        <p><strong>${labels.impact}:</strong> ${escapeHtml(experience.sbi.impact)}</p>
+      </div>
+    `;
+  }
+
+  function renderSimpleList(items) {
+    if (!items || !items.length) return "";
+    return `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+  }
+
+  async function downloadWord() {
+    if (!window.docx) {
+      setStatus(el.downloadStatus, "Error al generar Word. The DOCX library did not load; check your internet connection and try again.", "error");
+      return;
+    }
+    if (!el.resumeEditor.innerText.trim() || el.resumeEditor.querySelector(".editor-placeholder")) {
+      setStatus(el.downloadStatus, "Generate the optimized CV before downloading.", "warning");
+      return;
+    }
+
+    const languageCheck = verifyOutputLanguageBeforeExport();
+    if (!languageCheck.ok) {
+      setStatus(el.downloadStatus, languageCheck.message, "error");
+      return;
+    }
+
+    try {
+      setStatus(el.downloadStatus, "Generating editable Word document...", "");
+      const doc = buildDocxFromEditor();
+      const blob = await window.docx.Packer.toBlob(doc);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${safeFileName(getCandidate().name || "openresume")}_optimized.docx`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setStatus(el.downloadStatus, "Word document generated successfully.", "success");
+    } catch (error) {
+      console.error(error);
+      setStatus(el.downloadStatus, "Error al generar Word. Review the editable resume and try again.", "error");
+    }
+  }
+
+  function verifyOutputLanguageBeforeExport() {
+    const language = getLanguage();
+    const text = el.resumeEditor.innerText || "";
+    const englishRequired = ["PROFESSIONAL SUMMARY", "PROFESSIONAL EXPERIENCE", "TECHNICAL SKILLS", "OUTLINE", "Tools:", "Functions", "Situation:", "Behavior:", "Impact:"];
+    const spanishRequired = ["PERFIL PROFESIONAL", "EXPERIENCIA PROFESIONAL", "HABILIDADES TÉCNICAS", "OBJETIVO GENERAL", "Herramientas:", "Funciones", "Situación:", "Conducta:", "Impacto:"];
+    const englishForbidden = ["PERFIL PROFESIONAL", "EXPERIENCIA PROFESIONAL", "HABILIDADES TÉCNICAS", "OBJETIVO GENERAL", "Herramientas:", "Situación:", "Conducta:", "Impacto:", "Documentación", "Reportería", "Mejora de procesos", "Análisis de datos", "Analisis de datos", "Visualización", "Visualizacion", "Gestión", "Gestion", "Automatización", "Automatizacion", "Requerimientos", "Pruebas funcionales"];
+    const spanishForbidden = ["PROFESSIONAL SUMMARY", "PROFESSIONAL EXPERIENCE", "TECHNICAL SKILLS", "OUTLINE", "Tools:", "Situation:", "Behavior:", "Impact:"];
+    const required = language === "en" ? englishRequired : spanishRequired;
+    const forbidden = language === "en" ? englishForbidden : spanishForbidden;
+    const missing = required.filter((item) => !text.includes(item));
+    const mixed = forbidden.filter((item) => text.includes(item));
+
+    if (missing.length || mixed.length) {
+      return {
+        ok: false,
+        message: language === "en"
+          ? `Language check failed. The document should be in English. Missing: ${missing.join(", ") || "none"}. Mixed terms: ${mixed.join(", ") || "none"}.`
+          : `Validación de idioma fallida. El documento debe estar en español. Faltan: ${missing.join(", ") || "ninguno"}. Términos mezclados: ${mixed.join(", ") || "ninguno"}.`
+      };
+    }
+
+    return { ok: true, message: "" };
+  }
+
+  function buildDocxFromEditor() {
+    const {
+      Document,
+      Paragraph,
+      TextRun,
+      AlignmentType
+    } = window.docx;
+
+    const children = [];
+    Array.from(el.resumeEditor.childNodes).forEach((node) => {
+      children.push(...nodeToDocxParagraphs(node, { Paragraph, TextRun, AlignmentType }));
+    });
+
+    return new Document({
+      creator: "OpenResume Builder",
+      title: "Optimized resume",
+      description: "ATS-friendly resume generated in-browser by OpenResume Builder.",
+      styles: {
+        default: {
+          document: {
+            run: { font: "Garamond", size: 22 },
+            paragraph: { spacing: { after: 80 } }
+          }
+        }
+      },
+      sections: [{
+        properties: {
+          page: {
+            margin: { top: 720, right: 720, bottom: 720, left: 720 }
+          }
+        },
+        children: children.length ? children : [new Paragraph("")]
+      }]
+    });
+  }
+
+  function nodeToDocxParagraphs(node, api) {
+    const { Paragraph, TextRun, AlignmentType } = api;
+
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent.trim();
+      return text ? [new Paragraph({ children: [new TextRun(runProps(text))] })] : [];
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) return [];
+
+    const tag = node.tagName.toLowerCase();
+    if (tag === "div") {
+      const nested = [];
+      Array.from(node.childNodes).forEach((child) => nested.push(...nodeToDocxParagraphs(child, api)));
+      nested.push(new Paragraph({ children: [new TextRun(runProps(""))], spacing: { after: 160 } }));
+      return nested;
+    }
+
+    if (tag === "h1") {
+      return [new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 60 },
+        children: [new TextRun(runProps(node.innerText.trim(), { bold: true, size: 32 }))]
+      })];
+    }
+
+    if (tag === "h2") {
+      return [new Paragraph({
+        spacing: { before: 180, after: 80 },
+        children: [new TextRun(runProps(node.innerText.trim().toUpperCase(), { bold: true, underline: true, size: 24 }))]
+      })];
+    }
+
+    if (tag === "ul" || tag === "ol") {
+      return Array.from(node.children)
+        .filter((child) => child.tagName && child.tagName.toLowerCase() === "li")
+        .map((li) => new Paragraph({
+          bullet: { level: 0 },
+          spacing: { after: 45 },
+          children: inlineRuns(li, api)
+        }));
+    }
+
+    if (tag === "p" || tag === "li") {
+      const alignment = node.classList.contains("resume-title") || node.classList.contains("resume-contact")
+        ? AlignmentType.CENTER
+        : undefined;
+      return [new Paragraph({
+        alignment,
+        spacing: { after: 70 },
+        children: inlineRuns(node, api)
+      })];
+    }
+
+    return [new Paragraph({ children: inlineRuns(node, api) })];
+  }
+
+  function inlineRuns(element, api, style = {}) {
+    const { TextRun } = api;
+    const runs = [];
+    Array.from(element.childNodes).forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = normalizeInlineText(node.textContent);
+        if (text) runs.push(new TextRun(runProps(text, style)));
+        return;
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+      const tag = node.tagName.toLowerCase();
+      if (tag === "br") {
+        runs.push(new TextRun({ break: 1 }));
+        return;
+      }
+      const nextStyle = {
+        ...style,
+        bold: style.bold || tag === "strong" || tag === "b",
+        underline: style.underline || tag === "u"
+      };
+      runs.push(...inlineRuns(node, api, nextStyle));
+    });
+
+    if (!runs.length) {
+      const text = element.innerText || "";
+      const colon = splitColonLabel(text);
+      if (colon) {
+        runs.push(new TextRun(runProps(`${colon.label}:`, { bold: true })));
+        runs.push(new TextRun(runProps(` ${colon.rest}`)));
+      } else if (text.trim()) {
+        runs.push(new TextRun(runProps(text.trim(), style)));
+      }
+    }
+    return runs;
+  }
+
+  function runProps(text, options = {}) {
+    const props = {
+      text,
+      font: "Garamond",
+      size: options.size || 22,
+      bold: Boolean(options.bold)
+    };
+    if (options.underline) props.underline = { type: "single" };
+    return props;
+  }
+
+  function labelsFor(language) {
+    if (language === "en") {
+      return {
+        summary: "PROFESSIONAL SUMMARY",
+        outline: "OUTLINE",
+        experience: "PROFESSIONAL EXPERIENCE",
+        technicalSkills: "TECHNICAL SKILLS",
+        education: "EDUCATION",
+        certifications: "CERTIFICATIONS",
+        languages: "LANGUAGES",
+        additional: "ADDITIONAL INFORMATION",
+        toolsLabel: "Tools",
+        functions: "Functions",
+        situation: "Situation",
+        behavior: "Behavior",
+        impact: "Impact",
+        targetRolePlaceholder: `Target role ${MARKER}`,
+        contactPlaceholder: `Email | phone | LinkedIn ${MARKER}`
+      };
+    }
+
+    return {
+      summary: "PERFIL PROFESIONAL",
+      outline: "OBJETIVO GENERAL",
+      experience: "EXPERIENCIA PROFESIONAL",
+      technicalSkills: "HABILIDADES TÉCNICAS",
+      education: "EDUCACIÓN",
+      certifications: "CERTIFICACIONES",
+      languages: "IDIOMAS",
+      additional: "INFORMACIÓN ADICIONAL",
+      toolsLabel: "Herramientas",
+      functions: "Funciones",
+      situation: "Situación",
+      behavior: "Conducta",
+      impact: "Impacto",
+      targetRolePlaceholder: `Puesto objetivo ${MARKER}`,
+      contactPlaceholder: `Email | teléfono | LinkedIn ${MARKER}`
+    };
+  }
+
+  function copyManualToMain() {
+    copyIfPresent(el.manualFullName, el.fullName);
+    copyIfPresent(el.manualEmail, el.email);
+    copyIfPresent(el.manualPhone, el.phone);
+    copyIfPresent(el.manualLinkedin, el.linkedin);
+    copyIfPresent(el.manualTargetRole, el.targetRole);
+    copyIfPresent(el.manualJobDescription, el.jobDescription);
+    el.outputLanguage.value = el.manualOutputLanguage.value;
+    state.rawText = buildRawTextFromVisibleInputs();
+    state.parsed = parseResume(state.rawText);
+    setStatus(el.fileStatus, "Manual information is ready for analysis.", "success");
+  }
+
+  function copyIfPresent(from, to) {
+    if (from.value.trim()) to.value = from.value.trim();
+  }
+
+  function toggleManualPanel() {
+    const isHidden = el.manualPanel.hasAttribute("hidden");
+    if (isHidden) {
+      el.manualPanel.removeAttribute("hidden");
+      el.manualToggle.textContent = "Hide manual form";
+      el.manualPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      el.manualPanel.setAttribute("hidden", "");
+      el.manualToggle.textContent = "Use manual form";
+    }
+  }
+
+  function buildRawTextFromVisibleInputs() {
+    return normalizeText([
+      el.fullName.value,
+      el.email.value,
+      el.phone.value,
+      el.linkedin.value,
+      el.targetRole.value,
+      el.manualSummary.value,
+      el.manualExperience.value,
+      el.manualEducation.value,
+      el.manualCertifications.value,
+      el.manualSkills.value,
+      el.manualLanguages.value,
+      el.manualAdditional.value,
+      ...getManualExperienceDetails().flatMap((item) => [item.company, item.role, item.dates, item.detail])
+    ].filter(Boolean).join("\n"));
+  }
+
+  function getCandidate() {
+    return {
+      name: el.fullName.value.trim(),
+      email: el.email.value.trim(),
+      phone: el.phone.value.trim(),
+      linkedin: el.linkedin.value.trim()
+    };
+  }
+
+  function getTargetRole() {
+    return el.targetRole.value.trim();
+  }
+
+  function getJobDescription() {
+    return el.jobDescription.value.trim();
+  }
+
+  function getLanguage() {
+    return el.outputLanguage.value === "en" ? "en" : "es";
+  }
+
+  function resetApp() {
+    document.querySelectorAll("input, textarea").forEach((input) => {
+      if (input.type !== "file") input.value = "";
+      if (input.type === "file") input.value = "";
+    });
+    el.outputLanguage.value = "es";
+    el.manualOutputLanguage.value = "es";
+    state.rawText = "";
+    state.sourceName = "";
+    state.parsed = emptyParsed();
+    state.job = emptyJob();
+    state.analysis = null;
+    state.optimized = null;
+    el.atsScore.textContent = "--";
+    el.scoreTitle.textContent = "ATS score pending";
+    el.criteriaList.innerHTML = "";
+    el.issuesList.innerHTML = "";
+    el.keywordsDetected.innerHTML = "";
+    el.missingKeywords.innerHTML = "";
+    el.suggestionsList.innerHTML = `<p class="muted">Run an analysis to see targeted suggestions before generating the optimized resume.</p>`;
+    el.resumeEditor.innerHTML = `<p class="editor-placeholder">Generate the optimized CV to edit it here.</p>`;
+    el.generateBtn.disabled = true;
+    el.downloadBtn.disabled = true;
+    el.optimizedScoreBadge.textContent = "Optimized score: --";
+    renderExperienceRows(4);
+    setStatus(el.fileStatus, "No file processed yet.", "");
+    setStatus(el.downloadStatus, "", "");
+  }
+
+  function setStatus(target, message, type) {
+    target.textContent = message;
+    target.classList.remove("status--success", "status--warning", "status--error");
+    if (type) target.classList.add(`status--${type}`);
+  }
+
+  function detectDomain(text) {
+    const comparable = cleanComparable(text);
+    let best = "general";
+    let bestScore = 0;
+    Object.entries(domainLibrary).forEach(([key, value]) => {
+      const score = value.match.filter((term) => comparable.includes(cleanComparable(term))).length;
+      if (score > bestScore) {
+        best = key;
+        bestScore = score;
+      }
+    });
+    return best;
+  }
+
+  function detectSeniority(text) {
+    const comparable = cleanComparable(text);
+    if (/(senior|sr\.|lead|principal|jefe|líder|lider|coordinador)/i.test(comparable)) return "Senior";
+    if (/(junior|jr\.|entry|trainee|practicante|intern)/i.test(comparable)) return "Junior";
+    if (/(mid|semi senior|ssr|intermediate|intermedio)/i.test(comparable)) return "Mid-level";
+    return "";
+  }
+
+  function extractActionTerms(text) {
+    const comparable = cleanComparable(text);
+    const normalized = {
+      manage: "Managed",
+      managed: "Managed",
+      gestionar: "Gestioné",
+      lead: "Led",
+      led: "Led",
+      liderar: "Lideré",
+      design: "Designed",
+      implement: "Implemented",
+      analyze: "Analyzed",
+      develop: "Developed",
+      coordinate: "Coordinated",
+      optimize: "Optimized",
+      automate: "Automated",
+      document: "Documented",
+      improve: "Improved"
+    };
+    return unique(Object.entries(normalized)
+      .filter(([term]) => comparable.includes(term))
+      .map(([, value]) => value));
+  }
+
+  function extractFrequentTerms(text) {
+    const words = cleanComparable(text).split(/\s+/).filter((word) => word.length > 3 && !stopWords.has(word) && !/^\d+$/.test(word));
+    const counts = new Map();
+    words.forEach((word) => counts.set(word, (counts.get(word) || 0) + 1));
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .filter(([, count]) => count >= 2)
+      .slice(0, 12)
+      .map(([word]) => titleCase(word));
+  }
+
+  function extractResponsibilities(description) {
+    return description
+      .split(/(?:\n|\.|;)/)
+      .map((line) => line.trim())
+      .filter((line) => line.length > 35)
+      .filter((line) => /(responsib|require|must|will|manage|lead|develop|analy|coordinate|design|implement|automat|document|requer|deber|gestionar|lider|desarroll|analiz|coordinar|diseñ|implementar)/i.test(line))
+      .slice(0, 8);
+  }
+
+  function findKnownTerms(text, terms) {
+    const comparable = cleanComparable(text);
+    return unique(terms.filter((term) => knownTermInText(comparable, term)));
+  }
+
+  function knownTermInText(comparableText, term) {
+    const cleanTerm = cleanComparable(term);
+    if (!cleanTerm) return false;
+    if (cleanTerm.includes(" ")) return comparableText.includes(cleanTerm);
+    const escaped = escapeRegExp(cleanTerm);
+    return new RegExp(`(^|\\s)${escaped}(?=\\s|$)`, "i").test(comparableText);
+  }
+
+  function usesUnconfirmedTerm(sentence, sourceText, job) {
+    const terms = [...job.technical, ...job.keywords].filter((term) => term.length > 2);
+    return terms.some((term) => cleanComparable(sentence).includes(cleanComparable(term)) && !sourceText.includes(cleanComparable(term)));
+  }
+
+  function splitList(text) {
+    return unique((text || "")
+      .split(/[,;|\n]/)
+      .map((item) => item.replace(/^[-*]\s*/, "").trim())
+      .filter((item) => item.length > 1 && item.length < 80));
+  }
+
+  function splitExperienceParts(text) {
+    return unique((text || "")
+      .split(/\s+(?:\||\/|–|—|-| at | en | @ )\s+/i)
+      .map(cleanExperienceLine)
+      .filter((item) => item.length > 1 && item.length <= 100));
+  }
+
+  function cleanLines(text) {
+    return (text || "")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line && line.length < 240);
+  }
+
+  function cleanExperienceLine(line) {
+    return (line || "")
+      .replace(/^[-*]\s*/, "")
+      .replace(/\b(?:company|empresa|employer|empleador|role|cargo|position|puesto)\s*:\s*/ig, "")
+      .replace(/\s+/g, " ")
+      .replace(/^[|:/,.-]+|[|:/,-]+$/g, "")
+      .trim();
+  }
+
+  function normalizeLanguageLine(line) {
+    return cleanExperienceLine(line)
+      .replace(/\b(?:languages|idiomas)\s*:\s*/ig, "")
+      .replace(/\s*[-–—]\s*/g, " - ")
+      .trim();
+  }
+
+  function looksLikeLanguageLine(line) {
+    const clean = cleanComparable(line);
+    if (!clean || clean.length > 90) return false;
+    const hasLanguage = languageNames.some((name) => clean.includes(cleanComparable(name)));
+    const hasLevel = languageLevels.some((level) => clean.includes(cleanComparable(level)));
+    const hasTech = findKnownTerms(line, techTerms).length > 0;
+    const tooManyItems = splitList(line).length > 3;
+    return hasLanguage && (hasLevel || clean.split(" ").length <= 4) && !hasTech && !tooManyItems;
+  }
+
+  function isHeading(line, names) {
+    const clean = cleanComparable(line).replace(/[:.-]+$/g, "").trim();
+    return names.some((name) => {
+      const heading = cleanComparable(name);
+      const startsWithHeading = clean.startsWith(`${heading} `);
+      const wordCount = clean.split(/\s+/).filter(Boolean).length;
+      const headingWordCount = heading.split(/\s+/).filter(Boolean).length;
+      const hasHeadingMarker = new RegExp(`^\\s*${escapeRegExp(name)}\\s*:`, "i").test(line);
+      return clean === heading
+        || clean === `${heading}s`
+        || (startsWithHeading && (hasHeadingMarker || uppercaseRatio(line) > 0.58 || wordCount <= headingWordCount + 2));
+    });
+  }
+
+  function dateRangeRegex() {
+    const month = "(?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december|ene|enero|febrero|marzo|abr|abril|mayo|junio|julio|ago|agosto|septiembre|setiembre|octubre|noviembre|dic|diciembre)";
+    const year = "(?:19|20)\\d{2}";
+    const endpoint = `(?:(?:${month}\\.?\\s+)?${year}|presente|present|current|now|actualidad)`;
+    return new RegExp(`(?:${month}\\.?\\s+)?${year}\\s*(?:-|–|—|to|a|al|hasta)\\s*${endpoint}`, "i");
+  }
+
+  function findDateRange(text) {
+    const match = (text || "").match(dateRangeRegex());
+    return match ? match[0].replace(/\s+/g, " ").trim() : "";
+  }
+
+  function dateRegex() {
+    return /(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)?\.?\s*\d{4}\s*(?:[-–—]|to|a|al|hasta)\s*(?:present|current|actualidad|presente|now|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)?\.?\s*\d{0,4}|\b\d{4}\b/gim;
+  }
+
+  function isBullet(line) {
+    return /^[-*]\s+/.test(line) || /^(\d+[.)])\s+/.test(line);
+  }
+
+  function cleanBullet(line) {
+    return line.replace(/^[-*]\s+/, "").replace(/^(\d+[.)])\s+/, "").trim();
+  }
+
+  function looksLikeRole(line) {
+    return /(analyst|manager|developer|engineer|specialist|coordinator|consultant|assistant|director|lead|designer|recruiter|qa|scrum|product|project|analista|gerente|desarrollador|ingeniero|especialista|coordinador|consultor|asistente|jefe|líder|lider|diseñador|reclutador)/i.test(line);
+  }
+
+  function isCompanyCandidate(line) {
+    return companyScore(line) >= 2;
+  }
+
+  function companyScore(line) {
+    const clean = cleanExperienceLine(line);
+    if (!clean || clean.length < 2 || clean.length > 100) return 0;
+    if (looksLikeRole(clean) || findDateRange(clean) || isUrlLike(clean) || clean.includes("@")) return 0;
+    if (isHeading(clean, sectionHeadings) || looksLikeLanguageLine(clean)) return 0;
+
+    let score = 0;
+    if (uppercaseRatio(clean) > 0.55) score += 3;
+    if (/\b(inc|llc|ltd|limited|corp|corporation|company|co\.|group|partners|solutions|technologies|systems|consulting|s\.a\.c|sac|s\.a\.|sa|e\.i\.r\.l|eirl|spa|gmbh|ag|universidad|institute|instituto)\b/i.test(clean)) score += 3;
+    if (/^[A-ZÁÉÍÓÚÑ0-9][A-Za-zÁÉÍÓÚÑáéíóúñ0-9&.' -]+$/.test(clean)) score += 1;
+    if (clean.split(/\s+/).length <= 5) score += 1;
+    if (/[.:;]$/.test(clean)) score -= 1;
+    return score;
+  }
+
+  function looseCompanyScore(line) {
+    const clean = cleanExperienceLine(line);
+    if (!clean || clean.length < 2 || clean.length > 100) return 0;
+    if (looksLikeRole(clean) || looksLikeLanguageLine(clean) || isUrlLike(clean) || clean.includes("@")) return 0;
+    if (/^(functions|funciones|tools|herramientas|responsibilities|responsabilidades)$/i.test(clean)) return 0;
+
+    let score = 0;
+    const words = clean.split(/\s+/).filter(Boolean);
+    if (uppercaseRatio(clean) > 0.42) score += 2;
+    if (words.length <= 5) score += 1;
+    if (words.some((word) => /^[A-ZÁÉÍÓÚÑ0-9][A-Za-zÁÉÍÓÚÑáéíóúñ0-9&.'-]+$/.test(word))) score += 1;
+    if (/[.,;:]\s/.test(clean)) score -= 1;
+    return score;
+  }
+
+  function isUrlLike(line) {
+    return /(https?:\/\/|www\.|\.com|\.net|\.org|linkedin|github)/i.test(line);
+  }
+
+  function uppercaseRatio(line) {
+    const letters = line.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ]/g, "");
+    if (!letters) return 0;
+    const upper = letters.replace(/[^A-ZÁÉÍÓÚÑ]/g, "");
+    return upper.length / letters.length;
+  }
+
+  function summarizeText(text, maxWords) {
+    return text.split(/\s+/).slice(0, maxWords).join(" ").replace(/\s+[-•]\s+.*/g, "").trim();
+  }
+
+  function metricFor(index, language) {
+    const metrics = language === "es"
+      ? ["25%", "30%", "20%", "15%", "40%"]
+      : ["25%", "30%", "20%", "15%", "40%"];
+    return metrics[index % metrics.length];
+  }
+
+  function simpleTranslateDate(text, language) {
+    if (language === "en") {
+      return text
+        .replace(/Presente|Actualidad/gi, "Present")
+        .replace(/Enero/gi, "January")
+        .replace(/Febrero/gi, "February")
+        .replace(/Marzo/gi, "March")
+        .replace(/Abril/gi, "April")
+        .replace(/Mayo/gi, "May")
+        .replace(/Junio/gi, "June")
+        .replace(/Julio/gi, "July")
+        .replace(/Agosto/gi, "August")
+        .replace(/Septiembre|Setiembre/gi, "September")
+        .replace(/Octubre/gi, "October")
+        .replace(/Noviembre/gi, "November")
+        .replace(/Diciembre/gi, "December");
+    }
+    return text
+      .replace(/\bPresent\b|\bCurrent\b/gi, "Presente")
+      .replace(/January/gi, "Enero")
+      .replace(/February/gi, "Febrero")
+      .replace(/March/gi, "Marzo")
+      .replace(/April/gi, "Abril")
+      .replace(/June/gi, "Junio")
+      .replace(/July/gi, "Julio")
+      .replace(/August/gi, "Agosto")
+      .replace(/September/gi, "Septiembre")
+      .replace(/October/gi, "Octubre")
+      .replace(/November/gi, "Noviembre")
+      .replace(/December/gi, "Diciembre");
+  }
+
+  function translateRole(role, language) {
+    if (!role) return "";
+    const mapToEn = [
+      [/analista de datos/gi, "Data Analyst"],
+      [/desarrollador frontend|desarrolladora frontend/gi, "Frontend Developer"],
+      [/desarrollador backend|desarrolladora backend/gi, "Backend Developer"],
+      [/gestor de proyectos|jefe de proyecto|project manager/gi, "Project Manager"],
+      [/reclutador|reclutadora|reclutamiento/gi, "Recruiter"],
+      [/analista de negocio|analista funcional/gi, "Business Analyst"],
+      [/ingeniero qa|qa automation/gi, "QA Automation Engineer"]
+    ];
+    const mapToEs = [
+      [/data analyst/gi, "Analista de Datos"],
+      [/frontend developer/gi, "Desarrollador Frontend"],
+      [/backend developer/gi, "Desarrollador Backend"],
+      [/project manager/gi, "Gestor de Proyectos"],
+      [/recruiter|talent acquisition/gi, "Especialista de Reclutamiento"],
+      [/business analyst/gi, "Analista de Negocio"],
+      [/qa automation engineer|qa engineer/gi, "Ingeniero QA Automation"]
+    ];
+    const map = language === "en" ? mapToEn : mapToEs;
+    let output = role;
+    map.forEach(([regex, replacement]) => {
+      output = output.replace(regex, replacement);
+    });
+    return titleCase(output);
+  }
+
+  function simpleTranslate(text, language) {
+    const replacements = language === "en"
+      ? [
+        [/experiencia/gi, "experience"],
+        [/proyectos/gi, "projects"],
+        [/datos/gi, "data"],
+        [/reportes/gi, "reports"],
+        [/equipo/gi, "team"],
+        [/clientes/gi, "clients"],
+        [/procesos/gi, "processes"],
+        [/mejora/gi, "improvement"],
+        [/gestión/gi, "management"],
+        [/desarrollo/gi, "development"]
+      ]
+      : [
+        [/experience/gi, "experiencia"],
+        [/projects/gi, "proyectos"],
+        [/data/gi, "datos"],
+        [/reports/gi, "reportes"],
+        [/team/gi, "equipo"],
+        [/clients/gi, "clientes"],
+        [/processes/gi, "procesos"],
+        [/improvement/gi, "mejora"],
+        [/management/gi, "gestión"],
+        [/development/gi, "desarrollo"]
+      ];
+    return replacements.reduce((value, [regex, replacement]) => value.replace(regex, replacement), text);
+  }
+
+  function ensureList(items, fallback) {
+    const list = (items || []).filter(Boolean);
+    return list.length ? list.slice(0, 12) : fallback;
+  }
+
+  function structuredCloneSafe(value) {
+    return JSON.parse(JSON.stringify(value || {}));
+  }
+
+  function unique(items) {
+    const seen = new Set();
+    const output = [];
+    items.filter(Boolean).forEach((item) => {
+      const clean = item.toString().trim().replace(/\s+/g, " ");
+      const key = cleanComparable(clean);
+      if (!seen.has(key)) {
+        seen.add(key);
+        output.push(clean);
+      }
+    });
+    return output;
+  }
+
+  function dedupeExperiences(items) {
+    const seen = new Set();
+    return items.filter((item) => {
+      const key = cleanComparable(`${item.company} ${item.role} ${item.dates}`);
+      if (seen.has(key) || key.length < 4) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function cleanComparable(text) {
+    return (text || "")
+      .toString()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9+#. ]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function titleCase(text) {
+    return (text || "")
+      .toString()
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((word) => {
+        if (/^(api|qa|ui|ux|sql|ats|kpi|okr|html|css|aws|gcp|r)$/i.test(word)) return word.toUpperCase();
+        if (/^(and|or|of|de|del|la|las|los|y|en)$/i.test(word)) return word.toLowerCase();
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
+
+  function cleanupSentence(sentence) {
+    return sentence
+      .replace(/\s+\./g, ".")
+      .replace(/\s+,/g, ",")
+      .replace(/\s{2,}/g, " ")
+      .replace(new RegExp(`(?:${escapeRegExp(MARKER)}\\s*){2,}`, "g"), MARKER)
+      .trim();
+  }
+
+  function normalizeInlineText(text) {
+    return text.replace(/\s+/g, " ");
+  }
+
+  function splitColonLabel(text) {
+    const match = text.match(/^([^:]{2,28}):\s*(.+)$/);
+    if (!match) return null;
+    return { label: match[1], rest: match[2] };
+  }
+
+  function escapeHtml(value) {
+    return (value || "")
+      .toString()
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function safeFileName(value) {
+    return cleanComparable(value).replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "") || "openresume";
+  }
+})();
+
+  </script>
+</body>
+</html>
